@@ -4,6 +4,15 @@ import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
+export const RootRouter = {
+  path: '/',
+  name: 'Home',
+  component: Home,
+  meta: {
+    title: '管理中心'
+  }
+} as RouteConfig
+
 export const HomeRouter = {
   path: '/home',
   name: 'Home',
@@ -29,6 +38,7 @@ export const AboutRouter = {
 } as RouteConfig
 
 const routes: Array<RouteConfig> = [
+  RootRouter,
   LoginRouter,
   HomeRouter,
   AboutRouter

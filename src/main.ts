@@ -5,6 +5,10 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import axios, { AxiosStatic } from 'axios'
+import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon.vue'
+
+Vue.component('v-icon', Icon)
 
 Vue.prototype.$axios = axios
 

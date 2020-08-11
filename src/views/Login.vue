@@ -12,14 +12,16 @@
         <div>
           <el-row type="flex">
             <el-col :span="14">
-              <el-avatar :size="200"
-                         src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+              <el-avatar :size="200" class="login-avatar"
+                         :src="LoginCard.avatar.src">
+                <v-icon name="spinner" scale="1" :spin="LoginCard.avatar.spin"></v-icon>
+              </el-avatar>
             </el-col>
             <el-col :span="10">
               <el-form :model="loginForm" status-icon style="margin-top: 10%;">
                 <el-form-item prop="username" :rules="[{required:true,message:'用户名不能为空',trigger: 'blur'}]">
                   <el-input class="unInput" type="username" v-model="loginForm.username" placeholder="请输入用户名"
-                            prefix-icon="el-icon-user"/>
+                            prefix-icon="el-icon-user" v-on:blur="getAvatar"/>
                 </el-form-item>
                 <el-form-item class="pdInput" prop="password"
                               :rules="[{required:true,message:'密码不能为空',trigger: 'blur'}]">
@@ -51,7 +53,13 @@ export default Vue.extend({
   components: {},
   data () {
     return {
-      loginForm: new AdminLoginInput()
+      loginForm: new AdminLoginInput(),
+      LoginCard: {
+        avatar: {
+          src: '',
+          spin: false
+        }
+      }
     }
   },
   methods: {
@@ -75,6 +83,13 @@ export default Vue.extend({
           this.$store.commit('setLoading', { enable: false, text: '' })
         }
       )
+    },
+    getAvatar (): void {
+      this.LoginCard.avatar.spin = true
+      setTimeout(() => {
+        this.LoginCard.avatar.src = 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
+        this.LoginCard.avatar.spin = false
+      }, 2000)
     }
   }
 })
@@ -86,4 +101,6 @@ export default Vue.extend({
   min-height 1em
 .login-card
   margin-top 20%
+.login-avatar
+  background-color #226bb5
 </style>
