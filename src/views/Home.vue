@@ -29,7 +29,7 @@
       </div>
     </el-col>
     <el-col :xs="Main.size.xs" :sm="Main.size.sm" :md="Main.size.md" :lg="Main.size.lg" :xl="Main.size.xl">
-      <el-container>
+      <el-container direction="vertical">
         <div class="home-header">
           <div class="home-header-left">
             <div class="header-icon">
@@ -77,7 +77,7 @@
             </el-dropdown>
           </div>
         </div>
-        <div class="body"></div>
+        <Service></Service>
       </el-container>
     </el-col>
   </el-row>
@@ -86,6 +86,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import login from '@/mixins/login'
+import Service from '@/components/service/Service.vue'
 
 interface Pong {
   message?: string;
@@ -101,7 +102,7 @@ class Size {
 
 export default Vue.extend({
   name: 'Home',
-  components: {},
+  components: { Service },
   mixins: [login],
   data () {
     return {
@@ -175,7 +176,7 @@ export default Vue.extend({
 .home-header
   width 100%
   border-bottom #98ceff 1px solid
-  box-shadow 0 20px 20px -20px black
+  //box-shadow 0 20px 20px -20px black
   display flex
   flex-direction row
   place-items center
@@ -210,6 +211,7 @@ export default Vue.extend({
 .home-sidebar
   background-color #124485
   min-width 64px
+  height 100%
 
 //height 2000px
 
@@ -229,10 +231,16 @@ export default Vue.extend({
 .home-sidebar-nav
   border 0 !important
 
+.body
+  display flex
+  flex-direction column
+
 .el-col
   padding 0 !important
+  height 100%
 
 .el-row
   margin 0 !important
+  height 100%
 
 </style>

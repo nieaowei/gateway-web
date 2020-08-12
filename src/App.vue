@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
@@ -9,7 +9,19 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'App',
-  components: {
+  components: {},
+  data () {
+    return {
+      screenHeight: document.documentElement.clientHeight
+    }
+  },
+  watch: {
+    screenHeight (val) {
+      this.screenHeight = val
+      const app = document.getElementById('app')
+      if (app != null) {
+      }
+    }
   }
 })
 </script>
@@ -21,4 +33,9 @@ export default Vue.extend({
   -moz-osx-font-smoothing grayscale
   text-align center
   color #2c3e50
+  position absolute
+  top 0
+  bottom 0
+  height 100%
+  width 100%
 </style>
