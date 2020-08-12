@@ -1,20 +1,20 @@
 <template>
   <NavBody>
     <template v-slot:header>
-      <el-input class="body-header-input" v-model="Header.input"></el-input>
-      <el-button type="primary" v-on:click="SearchService(Header.input)">
+      <el-input class="body-header-input" size="small" v-model="Header.input"></el-input>
+      <el-button type="primary" size="small" v-on:click="SearchService(Header.input)">
         <v-icon name="search"/>
         搜索
       </el-button>
-      <el-button type="primary" v-on:click="addHttp">
+      <el-button type="primary" size="small" v-on:click="addHttp">
         <v-icon name="plus-circle"/>
         添加HTTP服务
       </el-button>
-      <el-button type="primary" v-on:click="addGrpc">
+      <el-button type="primary" size="small" v-on:click="addGrpc">
         <v-icon name="plus-circle"/>
         添加GRPC服务
       </el-button>
-      <el-button type="primary" v-on:click="addTcp">
+      <el-button type="primary" size="small" v-on:click="addTcp">
         <v-icon name="plus-circle"/>
         添加TCP服务
       </el-button>

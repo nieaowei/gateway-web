@@ -72,7 +72,7 @@ export default Vue.extend({
             return
           }
           this.$message({ message: '登录成功', type: 'success' })
-          this.$router.push('/about')
+          this.$router.push('/')
         }
       ).catch(
         reason => {

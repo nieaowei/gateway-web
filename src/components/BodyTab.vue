@@ -1,6 +1,7 @@
 <template>
   <el-tabs v-model="bodyTabItem.currentTabIndex" type="card" closable @tab-remove="removeTab" @tab-add="addTab" @tab-click="clickTab">
-    <el-tab-pane v-for="(item) in bodyTabItem.editTabs"
+    <el-tab-pane class="tab-pane"
+                  v-for="(item) in bodyTabItem.editTabs"
                  :key="item.name"
                  :label="item.title"
                  :name="item.name"
@@ -43,6 +44,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+.tab-pane
+  //height 200px
 </style>

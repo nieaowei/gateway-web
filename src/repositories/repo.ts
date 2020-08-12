@@ -534,6 +534,12 @@ export class AdminLoginInput {
   }
 }
 
+export class AdminLogoutInput {
+  Exec (axios: AxiosStatic): AxiosPromise<Response<any>> {
+    return axios.get<Response<any>>('api/admin/logout')
+  }
+}
+
 /**
  *
  * @export
@@ -677,6 +683,23 @@ export interface InlineResponse2002 {
 
 }
 
+export class GetServiceListInput {
+  info?: string
+  page_no!: number
+  page_size!: number
+
+  Exec (axios: AxiosStatic): AxiosPromise<Response<ServiceListOutput>> {
+    const param = '?page_no=' + this.page_no + '&page_size=' + this.page_size
+    return axios.get<Response<ServiceListOutput>>('api/service/list' + param)
+  }
+
+  constructor (pn: number, ps: number, i?: string) {
+    this.info = i
+    this.page_no = pn
+    this.page_size = ps
+  }
+}
+
 /**
  *
  * @export
@@ -758,13 +781,13 @@ export interface ServiceListOutput {
  * @export
  * @interface TongYongXiangYing
  */
-export interface TongYongXiangYing {
+export class Response<T> {
   /**
    *
    * @type {number}
    * @memberof TongYongXiangYing
    */
-  errno?: number;
+  errno!: number;
   /**
    *
    * @type {string}
@@ -776,7 +799,7 @@ export interface TongYongXiangYing {
    * @type {any}
    * @memberof TongYongXiangYing
    */
-  data?: any;
+  data!: T;
   /**
    *
    * @type {string}
@@ -1252,3 +1275,4 @@ export interface UpdateTcpServiceInput {
    */
   service_id: number;
 }
+// eslint:disable

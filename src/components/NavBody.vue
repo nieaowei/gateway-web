@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <div class="body-header">
+    <div id="body-header" ref="bodyheader" class="body-header">
       <slot name="header"></slot>
     </div>
     <div class="body-content">
@@ -23,20 +23,23 @@ export default Vue.extend({
   flex-direction column
 
 .body-header
-  padding-top 1em
   padding-left 1em
   padding-right 1em
   display flex
   flex-direction row
   justify-content flex-start
   align-items center
+  flex-wrap wrap
+
+.body-header .body-header-input
+.body-header .el-button
+  margin-top  0.8em
 
 .body-header-input
   min-width 20% !important
   max-width 30% !important
   margin-right 1em
 
-//width 20% !important
 .body-content
   padding-top 1em
   padding-left 1em

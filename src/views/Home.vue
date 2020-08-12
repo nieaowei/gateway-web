@@ -11,13 +11,13 @@
             <span>API网关</span>
           </el-link>
         </div>
-        <el-menu :collapse="HomeSideBar.nav.show" class="home-sidebar-nav" default-active="1" background-color="#124485"
-                 text-color="#ffffff">
-          <el-menu-item index="1">
+        <el-menu :collapse="HomeSideBar.nav.show" class="home-sidebar-nav" default-active="dashboard" background-color="#124485"
+                 text-color="#ffffff" router>
+          <el-menu-item index="dashboard">
             <v-icon name="chart-bar" />
             <span slot="title">仪表盘</span>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="2" :route="HomeSideBar.menuRoutes.serviceManagement">
             <v-icon name="server" />
             <span slot="title">服务管理</span>
           </el-menu-item>
@@ -29,8 +29,8 @@
       </div>
     </el-col>
     <el-col :xs="Main.size.xs" :sm="Main.size.sm" :md="Main.size.md" :lg="Main.size.lg" :xl="Main.size.xl">
-      <el-container direction="vertical">
-        <div class="home-header">
+       <div id="home">
+        <div class="home-header" id="home-header">
           <div class="home-header-left">
             <div class="header-icon">
               <el-button class="header-icon-bt" v-on:click="toggleSideBar">
@@ -60,25 +60,26 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown>
+            <el-dropdown @command="handleCommand">
               <el-button class="avatar-button" icon="el-icon-caret-bottom" circle>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>
+                <el-dropdown-item command="profile">
                   <v-icon name="id-card"/>个人信息
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item command="changepd">
                   <v-icon name="edit"></v-icon>修改密码
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item command="exit">
                   <v-icon name="sign-out-alt"></v-icon>退出
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
         </div>
-        <Service></Service>
-      </el-container>
+         <router-view></router-view>
+<!--        <component v-bind:is="Main.currentComponent"></component>-->
+       </div>
     </el-col>
   </el-row>
 </template>
@@ -87,27 +88,30 @@
 import Vue from 'vue'
 import login from '@/mixins/login'
 import Service from '@/components/service/Service.vue'
+import { AdminLogoutInput } from '@/repositories/repo'
+import { LoginRouter, ServiceRouter } from '@/router'
+import { ColSize } from '@/mixins/model'
 
-interface Pong {
-  message?: string;
-}
+const InitSideBarSize = { xs: 7, sm: 6, md: 5, lg: 3, xl: 3 } as ColSize
 
-class Size {
-  xs?: number;
-  sm?: number;
-  md?: number;
-  lg?: number;
-  xl?: number;
-}
+const InitMainSize = { xs: 17, sm: 18, md: 19, lg: 21, xl: 21 } as ColSize
+
+const InSideBarSize = { xs: 3, sm: 2, md: 2, lg: 1, xl: 1 } as ColSize
+
+const InMainSize = { xs: 21, sm: 22, md: 22, lg: 23, xl: 23 } as ColSize
 
 export default Vue.extend({
   name: 'Home',
-  components: { Service },
+  components: { },
   mixins: [login],
   data () {
     return {
       isCollapse: false,
       HomeSideBar: {
+        menuRoutes: {
+          dashboard: ServiceRouter,
+          serviceManagement: ServiceRouter
+        },
         logo: {
           text: {
             show: true
@@ -117,54 +121,42 @@ export default Vue.extend({
           show: false,
           icon: 'outdent'
         },
-        formerSize: {
-          xs: 7,
-          sm: 6,
-          md: 5,
-          lg: 3,
-          xl: 3
-        } as Size,
-        size: {
-          xs: 7,
-          sm: 6,
-          md: 5,
-          lg: 3,
-          xl: 3
-        } as Size
+        formerSize: InitSideBarSize,
+        size: InitSideBarSize
       },
       Main: {
-        formerSize: {
-          xs: 17,
-          sm: 18,
-          md: 19,
-          lg: 21,
-          xl: 21
-        } as Size,
-        size: {
-          xs: 17,
-          sm: 18,
-          md: 19,
-          lg: 21,
-          xl: 21
-        } as Size
+        currentComponent: Service,
+        formerSize: InitMainSize,
+        size: InitMainSize
       }
     }
   },
   methods: {
-    test (): void {
-      console.log('123')
-    },
     toggleSideBar (): void {
       this.HomeSideBar.nav.show = !this.HomeSideBar.nav.show
       this.HomeSideBar.logo.text.show = !this.HomeSideBar.logo.text.show
       if (this.HomeSideBar.nav.show) {
-        this.HomeSideBar.size = { xs: 3, sm: 2, md: 2, lg: 1, xl: 1 } as Size
-        this.Main.size = { xs: 21, sm: 22, md: 22, lg: 23, xl: 23 } as Size
+        this.HomeSideBar.size = InSideBarSize
+        this.Main.size = InMainSize
         this.HomeSideBar.nav.icon = 'indent'
       } else {
         this.HomeSideBar.size = this.HomeSideBar.formerSize
         this.Main.size = this.Main.formerSize
         this.HomeSideBar.nav.icon = 'outdent'
+      }
+    },
+    handleCommand (cmd: string) {
+      switch (cmd) {
+        case 'exit': {
+          new AdminLogoutInput().Exec(this.$axios).then(
+            value => {
+              if (value.data.errno === 0) {
+                this.$message({ type: 'success', message: '退出成功' })
+                this.$router.push(LoginRouter)
+              }
+            }
+          )
+        }
       }
     }
   }
@@ -179,21 +171,21 @@ export default Vue.extend({
   //box-shadow 0 20px 20px -20px black
   display flex
   flex-direction row
-  place-items center
-  justify-items flex-start
+  align-items center
+  justify-content  flex-start
 
 .home-header-left
   width 95%
-  display inline-flex
+  display flex
   flex-direction row
   align-items center
-  justify-items flex-start
+  justify-content  flex-start
 
 .home-header-right
-  display inline-flex
+  display flex
   flex-direction row
   align-items flex-end
-  justify-items flex-start
+  justify-content  flex-start
 
 .header-icon
   padding 20px
@@ -212,8 +204,6 @@ export default Vue.extend({
   background-color #124485
   min-width 64px
   height 100%
-
-//height 2000px
 
 .home-sidebar-logo
   display flex
@@ -243,4 +233,9 @@ export default Vue.extend({
   margin 0 !important
   height 100%
 
+#home
+  display flex
+  flex-direction column
+  justify-content flex-start
+  height 100%
 </style>

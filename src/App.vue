@@ -12,15 +12,6 @@ export default Vue.extend({
   components: {},
   data () {
     return {
-      screenHeight: document.documentElement.clientHeight
-    }
-  },
-  watch: {
-    screenHeight (val) {
-      this.screenHeight = val
-      const app = document.getElementById('app')
-      if (app != null) {
-      }
     }
   }
 })

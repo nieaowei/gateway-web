@@ -11,8 +11,8 @@ export class ColumnSize {
 export class EditTabItem {
   name!: string
   title!: string
-  component: Component
-  data!: any
+  component!: Component
+  data?: any
   constructor (name: string, title: string, component: Component) {
     this.name = name
     this.title = title
@@ -31,4 +31,12 @@ export class BodyTabItem {
       this.nameNum = tabs.length + 1
     }
   }
+}
+
+export class ColSize {
+  xs?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
+  xl?: number;
 }
