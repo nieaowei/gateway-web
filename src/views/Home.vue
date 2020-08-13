@@ -11,17 +11,17 @@
             <span>API网关</span>
           </el-link>
         </div>
-        <el-menu :collapse="HomeSideBar.nav.show" class="home-sidebar-nav" default-active="dashboard" background-color="#124485"
+        <el-menu :collapse="HomeSideBar.nav.show" class="home-sidebar-nav" :default-active="HomeSideBar.defaultRouter" background-color="#124485"
                  text-color="#ffffff" router>
-          <el-menu-item index="dashboard">
+          <el-menu-item :index="HomeSideBar.menuRoutes.dashboard.path" :route="HomeSideBar.menuRoutes.dashboard">
             <v-icon name="chart-bar" />
             <span slot="title">仪表盘</span>
           </el-menu-item>
-          <el-menu-item index="2" :route="HomeSideBar.menuRoutes.serviceManagement">
+          <el-menu-item :index="HomeSideBar.menuRoutes.serviceManagement.path" :route="HomeSideBar.menuRoutes.serviceManagement">
             <v-icon name="server" />
             <span slot="title">服务管理</span>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item :index="HomeSideBar.menuRoutes.tenant.path" :route="HomeSideBar.menuRoutes.tenant">
             <v-icon name="users"/>
             <span slot="title">租户管理</span>
           </el-menu-item>
@@ -43,19 +43,19 @@
             </el-breadcrumb>
           </div>
           <div class="home-header-right">
-            <el-dropdown>
+            <el-dropdown @command="handleCommand">
               <el-button class="avatar-button" circle>
                 <el-avatar class="header-avatar" size="medium"
                            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>
+                <el-dropdown-item command="profile">
                   <v-icon name="id-card"/>个人信息
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item command="changepd">
                   <v-icon name="edit"></v-icon>修改密码
                 </el-dropdown-item>
-                <el-dropdown-item>
+                <el-dropdown-item command="exit">
                   <v-icon name="sign-out-alt"></v-icon>退出
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -77,7 +77,9 @@
             </el-dropdown>
           </div>
         </div>
-         <router-view></router-view>
+         <transition name="slide-fade">
+           <router-view></router-view>
+         </transition>
 <!--        <component v-bind:is="Main.currentComponent"></component>-->
        </div>
     </el-col>
@@ -89,7 +91,7 @@ import Vue from 'vue'
 import login from '@/mixins/login'
 import Service from '@/components/service/Service.vue'
 import { AdminLogoutInput } from '@/repositories/repo'
-import { LoginRouter, ServiceRouter } from '@/router'
+import { DashboardRouter, LoginRouter, ServiceRouter, TenantRouter } from '@/router'
 import { ColSize } from '@/mixins/model'
 
 const InitSideBarSize = { xs: 7, sm: 6, md: 5, lg: 3, xl: 3 } as ColSize
@@ -108,9 +110,11 @@ export default Vue.extend({
     return {
       isCollapse: false,
       HomeSideBar: {
+        defaultRouter: DashboardRouter.path,
         menuRoutes: {
-          dashboard: ServiceRouter,
-          serviceManagement: ServiceRouter
+          dashboard: DashboardRouter,
+          serviceManagement: ServiceRouter,
+          tenant: TenantRouter
         },
         logo: {
           text: {
@@ -130,6 +134,10 @@ export default Vue.extend({
         size: InitMainSize
       }
     }
+  },
+  created () {
+    // router and mune
+    this.HomeSideBar.defaultRouter = this.$router.currentRoute.path
   },
   methods: {
     toggleSideBar (): void {
@@ -238,4 +246,15 @@ export default Vue.extend({
   flex-direction column
   justify-content flex-start
   height 100%
+
+.slide-fade-enter-active
+    transition: all 2s ease
+
+//.slide-fade-leave-active
+//  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+
+.slide-fade-enter
+  transform: translateX(200px);
+  opacity: 0;
+
 </style>

@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <transition name="slide-fade">
+      <router-view/>
+    </transition>
   </div>
 </template>
 
@@ -29,4 +31,11 @@ export default Vue.extend({
   bottom 0
   height 100%
   width 100%
+
+.slide-fade-enter-active
+  transition: all 2s ease
+
+.slide-fade-enter
+  transform: translateX(300px);
+  opacity: 0;
 </style>

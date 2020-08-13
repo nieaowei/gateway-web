@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <div id="body-header" ref="bodyheader" class="body-header">
+    <div id="body-header" class="body-header">
       <slot name="header"></slot>
     </div>
     <div class="body-content">

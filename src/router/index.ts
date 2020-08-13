@@ -2,8 +2,27 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Home from '../views/Home.vue'
 import Service from '@/components/service/Service.vue'
-
+import Dashboard from '@/components/dashboard/Dashboard.vue'
+import Tenant from '@/components/tenant/Tenant.vue'
 Vue.use(VueRouter)
+
+export const TenantRouter = {
+  path: '/tenant',
+  name: 'Tenant',
+  component: Tenant,
+  meta: {
+    title: '租户管理-管理中心'
+  }
+} as RouteConfig
+
+export const DashboardRouter = {
+  path: '/dashboard',
+  name: 'DashBoard',
+  component: Dashboard,
+  meta: {
+    title: '仪表盘-管理中心'
+  }
+} as RouteConfig
 
 export const ServiceRouter = {
   path: '/service',
@@ -22,7 +41,9 @@ export const RootRouter = {
     title: '管理中心'
   },
   children: [
-    ServiceRouter
+    ServiceRouter,
+    DashboardRouter,
+    TenantRouter
   ]
 } as RouteConfig
 
