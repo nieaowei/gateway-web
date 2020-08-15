@@ -1,7 +1,8 @@
 <template>
   <NavBody>
     <template v-slot:header>
-      <el-input class="body-header-input" size="small" v-model="Header.input"></el-input>
+      <el-input class="body-header-input" size="small" v-model="Header.input"
+                v-on:keyup.enter.native="SearchService(Header.input)"></el-input>
       <el-button type="primary" size="small" v-on:click="SearchService(Header.input)">
         <v-icon name="search"/>
         搜索
@@ -20,22 +21,24 @@
       </el-button>
     </template>
     <template v-slot:content>
-      <BodyTab :body-tab-item="Content.editableTabs" :remove-tab="removeTab"></BodyTab>
+      <BodyTab :body-tab-item="Content.editableTabs" :remove-tab="removeTab" v-on:complete="complete"></BodyTab>
     </template>
   </NavBody>
 </template>
 
 <script lang="ts">
-import Vue, { Component } from 'vue'
+import Vue from 'vue'
 import NavBody from '@/components/NavBody.vue'
 import BodyTab from '@/components/BodyTab.vue'
 import HttpPane from '@/components/service/HttpPane.vue'
-import { EditTabItem, BodyTabItem } from '@/mixins/model'
+import {EditTabItem, BodyTabItem} from '@/mixins/model'
 import ServiceListPane from '@/components/service/ServiceListPane.vue'
+import StepsPane from '@/components/StepsPane.vue'
+
 export default Vue.extend({
   name: 'Service',
-  components: { NavBody, BodyTab },
-  data () {
+  components: {NavBody, BodyTab},
+  data() {
     return {
       Header: {
         input: ''
@@ -45,18 +48,18 @@ export default Vue.extend({
           {
             name: '1',
             title: '服务列表',
-            component: ServiceListPane
+            component: ServiceListPane,
+            data: ''
           }
-        ]as EditTabItem[])
+        ] as EditTabItem[])
       }
     }
   },
   methods: {
-    SearchService (val: string): void {
-      console.log(val)
+    SearchService(val: string): void {
+      this.Content.editableTabs.editTabs[0].data = val
     },
-    removeTab (name: string) {
-      console.log(name)
+    removeTab(name: string) {
       // if last
       const tabs = this.Content.editableTabs
       if (name === tabs.editTabs[tabs.editTabs.length - 1].name) {
@@ -76,18 +79,18 @@ export default Vue.extend({
       }
       // if middle
       tabs.editTabs.some(
-        function (value: EditTabItem, index: number) {
-          if (name === value.name) {
-            tabs.editTabs.splice(index, 1)
-            if (name === tabs.currentTabIndex) {
-              tabs.currentTabIndex = tabs.editTabs[index].name
+          function (value: EditTabItem, index: number) {
+            if (name === value.name) {
+              tabs.editTabs.splice(index, 1)
+              if (name === tabs.currentTabIndex) {
+                tabs.currentTabIndex = tabs.editTabs[index].name
+              }
+              return true
             }
-            return true
           }
-        }
       )
     },
-    addTab (newItem: EditTabItem) {
+    addTab(newItem: EditTabItem) {
       const tabs = this.Content.editableTabs
       newItem.name = tabs.nameNum.toString()
       console.log('num' + tabs.nameNum)
@@ -96,16 +99,19 @@ export default Vue.extend({
       tabs.nameNum++
       tabs.currentTabIndex = newItem.name
     },
-    addHttp () {
-      const newItem = new EditTabItem('', '新建HTTP服务', HttpPane)
-      newItem.data = { data: '9090' } as object
+    addHttp() {
+      const newItem = new EditTabItem('', '新建HTTP服务', StepsPane)
+      newItem.data = {data: '9090'} as object
       this.addTab(newItem)
     },
-    addGrpc () {
+    addGrpc() {
       this.addTab(new EditTabItem('', '新建GRPC服务', HttpPane))
     },
-    addTcp () {
+    addTcp() {
       this.addTab(new EditTabItem('', '新建TCP服务', HttpPane))
+    },
+    complete(item: EditTabItem) {
+      this.removeTab(item.name)
     }
   }
 })
@@ -117,8 +123,5 @@ export default Vue.extend({
   min-width 20% !important
   max-width 30% !important
   margin-right 1em
-
-.body-content-page
-  margin-top 1em
 
 </style>

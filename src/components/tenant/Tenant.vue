@@ -12,9 +12,10 @@
 <script lang="ts">
 import Vue from 'vue'
 import NavBody from '@/components/NavBody.vue'
+
 export default Vue.extend({
   name: 'Tenant',
-  components: { NavBody }
+  components: {NavBody}
 })
 </script>
 

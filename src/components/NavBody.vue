@@ -1,9 +1,9 @@
 <template>
-  <div class="body">
-    <div id="body-header" class="body-header">
+  <div class="nav-body">
+    <div id="body-header" class="nav-body-header">
       <slot name="header"></slot>
     </div>
-    <div class="body-content">
+    <div class="nav-body-content">
       <slot name="content"></slot>
     </div>
   </div>
@@ -18,11 +18,11 @@ export default Vue.extend({
 </script>
 
 <style lang="stylus" scoped>
-.body
+.nav-body
   display flex
   flex-direction column
 
-.body-header
+.nav-body-header
   padding-left 1em
   padding-right 1em
   display flex
@@ -31,20 +31,20 @@ export default Vue.extend({
   align-items center
   flex-wrap wrap
 
-.body-header .body-header-input
-.body-header .el-button
-  margin-top  0.8em
+.nav-body-header .el-input
+.nav-body-header .el-button
+  margin-top 0.8em
 
-.body-header-input
-  min-width 20% !important
-  max-width 30% !important
-  margin-right 1em
+//.body-header-input
+//  min-width 20% !important
+//  max-width 30% !important
+//  margin-right 1em
 
-.body-content
+.nav-body-content
   padding-top 1em
   padding-left 1em
   padding-right 1em
 
-.body-content-page
-  margin-top 1em
+//.body-content-page
+//  margin-top 1em
 </style>

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { AdminInfoOutput } from '@/repositories/repo'
+import {AdminInfoOutput} from '@/repositories/repo'
 
 export default Vue.extend({
   name: 'About'

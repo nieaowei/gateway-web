@@ -1,4 +1,5 @@
 module.exports = {
+  lintOnSave: false,
   configureWebpack: {
     resolve: {
       alias: {
@@ -9,11 +10,11 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:8880/',
+        target: 'http://47.106.251.178:8880/',
         pathRewrite: {
           '^/api': ''
         },
-        changeOrigin: true
+        changeOrigin: false
       }
     }
   }

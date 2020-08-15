@@ -1,6 +1,7 @@
 <template>
   <el-row>
-    <el-col id="sidebar" :xs="HomeSideBar.size.xs" :sm="HomeSideBar.size.sm" :md="HomeSideBar.size.md" :lg="HomeSideBar.size.lg" :xl="HomeSideBar.size.xl">
+    <el-col id="sidebar" :xs="HomeSideBar.size.xs" :sm="HomeSideBar.size.sm" :md="HomeSideBar.size.md"
+            :lg="HomeSideBar.size.lg" :xl="HomeSideBar.size.xl">
       <div class="home-sidebar">
         <div class="home-sidebar-logo">
           <el-link :underline="false" href="/home">
@@ -11,17 +12,19 @@
             <span>API网关</span>
           </el-link>
         </div>
-        <el-menu :collapse="HomeSideBar.nav.show" class="home-sidebar-nav" :default-active="HomeSideBar.defaultRouter" background-color="#124485"
+        <el-menu :collapse="HomeSideBar.nav.show" class="home-sidebar-nav" :default-active="HomeSideBar.defaultRouter"
+                 background-color="#124485"
                  text-color="#ffffff" router>
-          <el-menu-item :index="HomeSideBar.menuRoutes.dashboard.path" :route="HomeSideBar.menuRoutes.dashboard">
-            <v-icon name="chart-bar" />
+          <el-menu-item :index="HomeSideBar.menuRoutes.dashboard.name" :route="HomeSideBar.menuRoutes.dashboard">
+            <v-icon name="chart-bar"/>
             <span slot="title">仪表盘</span>
           </el-menu-item>
-          <el-menu-item :index="HomeSideBar.menuRoutes.serviceManagement.path" :route="HomeSideBar.menuRoutes.serviceManagement">
-            <v-icon name="server" />
+          <el-menu-item :index="HomeSideBar.menuRoutes.serviceManagement.name"
+                        :route="HomeSideBar.menuRoutes.serviceManagement">
+            <v-icon name="server"/>
             <span slot="title">服务管理</span>
           </el-menu-item>
-          <el-menu-item :index="HomeSideBar.menuRoutes.tenant.path" :route="HomeSideBar.menuRoutes.tenant">
+          <el-menu-item :index="HomeSideBar.menuRoutes.tenant.name" :route="HomeSideBar.menuRoutes.tenant">
             <v-icon name="users"/>
             <span slot="title">租户管理</span>
           </el-menu-item>
@@ -29,7 +32,7 @@
       </div>
     </el-col>
     <el-col :xs="Main.size.xs" :sm="Main.size.sm" :md="Main.size.md" :lg="Main.size.lg" :xl="Main.size.xl">
-       <div id="home">
+      <div id="home">
         <div class="home-header" id="home-header">
           <div class="home-header-left">
             <div class="header-icon">
@@ -50,13 +53,16 @@
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="profile">
-                  <v-icon name="id-card"/>个人信息
+                  <v-icon name="id-card"/>
+                  个人信息
                 </el-dropdown-item>
                 <el-dropdown-item command="changepd">
-                  <v-icon name="edit"></v-icon>修改密码
+                  <v-icon name="edit"></v-icon>
+                  修改密码
                 </el-dropdown-item>
                 <el-dropdown-item command="exit">
-                  <v-icon name="sign-out-alt"></v-icon>退出
+                  <v-icon name="sign-out-alt"></v-icon>
+                  退出
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -65,23 +71,26 @@
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="profile">
-                  <v-icon name="id-card"/>个人信息
+                  <v-icon name="id-card"/>
+                  个人信息
                 </el-dropdown-item>
                 <el-dropdown-item command="changepd">
-                  <v-icon name="edit"></v-icon>修改密码
+                  <v-icon name="edit"></v-icon>
+                  修改密码
                 </el-dropdown-item>
                 <el-dropdown-item command="exit">
-                  <v-icon name="sign-out-alt"></v-icon>退出
+                  <v-icon name="sign-out-alt"></v-icon>
+                  退出
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
         </div>
-         <transition name="slide-fade">
-           <router-view></router-view>
-         </transition>
-<!--        <component v-bind:is="Main.currentComponent"></component>-->
-       </div>
+        <transition name="slide-fade">
+          <router-view></router-view>
+        </transition>
+        <!--        <component v-bind:is="Main.currentComponent"></component>-->
+      </div>
     </el-col>
   </el-row>
 </template>
@@ -90,27 +99,27 @@
 import Vue from 'vue'
 import login from '@/mixins/login'
 import Service from '@/components/service/Service.vue'
-import { AdminLogoutInput } from '@/repositories/repo'
-import { DashboardRouter, LoginRouter, ServiceRouter, TenantRouter } from '@/router'
-import { ColSize } from '@/mixins/model'
+import {AdminLogoutInput} from '@/repositories/repo'
+import {DashboardRouter, HomeRouter, LoginRouter, RootRouter, ServiceRouter, TenantRouter} from '@/router'
+import {ColSize} from '@/mixins/model'
 
-const InitSideBarSize = { xs: 7, sm: 6, md: 5, lg: 3, xl: 3 } as ColSize
+const InitSideBarSize = {xs: 7, sm: 6, md: 5, lg: 3, xl: 3} as ColSize
 
-const InitMainSize = { xs: 17, sm: 18, md: 19, lg: 21, xl: 21 } as ColSize
+const InitMainSize = {xs: 17, sm: 18, md: 19, lg: 21, xl: 21} as ColSize
 
-const InSideBarSize = { xs: 3, sm: 2, md: 2, lg: 1, xl: 1 } as ColSize
+const InSideBarSize = {xs: 3, sm: 2, md: 2, lg: 1, xl: 1} as ColSize
 
-const InMainSize = { xs: 21, sm: 22, md: 22, lg: 23, xl: 23 } as ColSize
+const InMainSize = {xs: 21, sm: 22, md: 22, lg: 23, xl: 23} as ColSize
 
 export default Vue.extend({
   name: 'Home',
-  components: { },
+  components: {},
   mixins: [login],
-  data () {
+  data() {
     return {
       isCollapse: false,
       HomeSideBar: {
-        defaultRouter: DashboardRouter.path,
+        defaultRouter: DashboardRouter.name,
         menuRoutes: {
           dashboard: DashboardRouter,
           serviceManagement: ServiceRouter,
@@ -135,12 +144,24 @@ export default Vue.extend({
       }
     }
   },
-  created () {
+  created() {
     // router and mune
-    this.HomeSideBar.defaultRouter = this.$router.currentRoute.path
+    if (this.$router.currentRoute.name !== null && this.$router.currentRoute.name !== HomeRouter.name) {
+      console.log(TenantRouter.path)
+
+      console.log(this.$router.currentRoute.path)
+      this.HomeSideBar.defaultRouter = this.$router.currentRoute.name
+    }
+    //
+    // if (this.$router.currentRoute.path !== HomeRouter.path && this.$router.currentRoute.path !== RootRouter.path) {
+    //   this.HomeSideBar.defaultRouter = this.$router.currentRoute.path
+    // }
+    // } else {
+    //   this.$router.push(DashboardRouter)
+    // }
   },
   methods: {
-    toggleSideBar (): void {
+    toggleSideBar(): void {
       this.HomeSideBar.nav.show = !this.HomeSideBar.nav.show
       this.HomeSideBar.logo.text.show = !this.HomeSideBar.logo.text.show
       if (this.HomeSideBar.nav.show) {
@@ -153,16 +174,16 @@ export default Vue.extend({
         this.HomeSideBar.nav.icon = 'outdent'
       }
     },
-    handleCommand (cmd: string) {
+    handleCommand(cmd: string) {
       switch (cmd) {
         case 'exit': {
           new AdminLogoutInput().Exec(this.$axios).then(
-            value => {
-              if (value.data.errno === 0) {
-                this.$message({ type: 'success', message: '退出成功' })
-                this.$router.push(LoginRouter)
+              value => {
+                if (value.data.errno === 0) {
+                  this.$message({type: 'success', message: '退出成功'})
+                  this.$router.push(LoginRouter)
+                }
               }
-            }
           )
         }
       }
@@ -180,26 +201,27 @@ export default Vue.extend({
   display flex
   flex-direction row
   align-items center
-  justify-content  flex-start
+  justify-content flex-start
 
 .home-header-left
   width 95%
   display flex
   flex-direction row
   align-items center
-  justify-content  flex-start
+  justify-content flex-start
 
 .home-header-right
   display flex
   flex-direction row
   align-items flex-end
-  justify-content  flex-start
+  justify-content flex-start
 
 .header-icon
   padding 20px
+
 .header-icon-bt
   border 0 !important
-  padding  0 !important
+  padding 0 !important
 
 .avatar-button
   border 0 !important
@@ -248,7 +270,7 @@ export default Vue.extend({
   height 100%
 
 .slide-fade-enter-active
-    transition: all 2s ease
+  transition: all 2s ease
 
 //.slide-fade-leave-active
 //  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)

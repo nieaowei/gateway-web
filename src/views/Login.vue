@@ -20,12 +20,12 @@
             <el-col :span="10">
               <el-form :model="loginForm" status-icon style="margin-top: 10%;">
                 <el-form-item prop="username" :rules="[{required:true,message:'用户名不能为空',trigger: 'blur'}]">
-                  <el-input class="unInput" type="username" v-model="loginForm.username" placeholder="请输入用户名"
+                  <el-input v-on:keyup.enter.native="login" class="unInput" type="username" v-model="loginForm.username" placeholder="请输入用户名"
                             prefix-icon="el-icon-user" v-on:blur="getAvatar"/>
                 </el-form-item>
                 <el-form-item class="pdInput" prop="password"
                               :rules="[{required:true,message:'密码不能为空',trigger: 'blur'}]">
-                  <el-input type="password" v-model="loginForm.password" placeholder="请输入密码" prefix-icon="el-icon-lock"
+                  <el-input v-on:keyup.enter.native="login" type="password" v-model="loginForm.password" placeholder="请输入密码" prefix-icon="el-icon-lock"
                             show-password/>
                 </el-form-item>
                 <el-button type="primary" v-on:click="login" icon="el-icon-circle-check">登录</el-button>
@@ -46,6 +46,7 @@
 import Vue from 'vue'
 import { AdminLoginInput } from '@/repositories/repo'
 import login from '@/mixins/login'
+import { HomeRouter } from '@/router'
 
 export default Vue.extend({
   name: 'Login',
@@ -67,12 +68,12 @@ export default Vue.extend({
       this.$store.commit('setLoading', { enable: true, text: '正在登录中......' })
       this.loginForm.Exec(this.$axios).then(
         value => {
-          if (value.data.errno !== 0) {
-            this.$message({ message: value.data.errmsg, type: 'error' })
+          if (value.data.errno === 0) {
+            this.$message({ message: '登录成功', type: 'success' })
+            this.$router.push(HomeRouter)
             return
           }
-          this.$message({ message: '登录成功', type: 'success' })
-          this.$router.push('/')
+          this.$message({ message: value.data.errmsg, type: 'error' })
         }
       ).catch(
         reason => {
