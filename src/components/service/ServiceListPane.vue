@@ -12,7 +12,7 @@
       <el-table-column label="操作" fixed="right" min-width="150px" align="center">
         <template slot-scope="scope">
           <el-button size="mini" type="primary">统计</el-button>
-          <el-button size="mini" type="primary">修改</el-button>
+          <el-button size="mini" type="primary" @click="editService(scope.row)">修改</el-button>
           <el-popconfirm title="确定删除 ？" @onConfirm="deleteService(scope.row)" style="margin-left: 10px;">
             <el-button size="mini" slot="reference" type="danger">删除</el-button>
           </el-popconfirm>
@@ -38,11 +38,19 @@
 import Vue from 'vue'
 import {DeleteServiceInput, GetServiceListInput, ServiceListItem, ServiceListOutput} from '@/repositories/repo'
 
+export class ServiceListPaneData {
+  input = ''
+  constructor() {
+    this.input = ''
+  }
+}
+
 export default Vue.extend({
   name: 'ServiceListPane',
   props: {
     tempData: {
-      type: String
+      type: ServiceListPaneData,
+      default: () => new ServiceListPaneData()
     }
   },
   data() {
@@ -53,11 +61,21 @@ export default Vue.extend({
       tableHeight: document.documentElement.clientHeight - 50 - 62 - 41 - 16 - 32 - 50 - 30
     }
   },
+  computed:{
+    input: function (): string {
+      return this.tempData.input
+    }
+  },
   watch: {
-    tempData: function (val) {
-      console.log('new' + val)
-      this.query.info = val
-      this.getServiceList()
+    input: {
+      handler: function (val: string,oldVal: string) {
+        console.log(val)
+        console.log(oldVal)
+        if (oldVal!==val){
+          this.query.info = val
+          this.getServiceList()
+        }
+      }
     }
   },
   created() {
@@ -110,6 +128,9 @@ export default Vue.extend({
             this.$message.error(reason)
           }
       )
+    },
+    editService(row: ServiceListItem) {
+      this.$emit("edit-service", row)
     }
     // sizeChange (size: number) {
     //   this.getServiceList(new GetServiceListInput(1, size))

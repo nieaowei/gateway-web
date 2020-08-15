@@ -1,34 +1,34 @@
 <template>
   <StepsPane :steps="stepsItems" v-on:steps-change="change">
     <template slot="content">
-<!--      <transition name="slide-fade">-->
-        <el-form v-if="active===0" key="0">
-          <el-form-item label="input:">
-            <el-input></el-input>
-          </el-form-item>
-        </el-form>
-<!--      </transition>-->
-<!--      <transition name="slide-fade">-->
-        <el-form v-if="active===1" key="1">
-          <el-form-item label="input1:">
-            <el-input></el-input>
-          </el-form-item>
-        </el-form>
-<!--      </transition>-->
-<!--      <transition name="slide-fade">-->
-        <el-form v-if="active===2" key="2">
-          <el-form-item label="input2:">
-            <el-input></el-input>
-          </el-form-item>
-        </el-form>
-<!--      </transition>-->
-<!--      <transition name="slide-fade">-->
-        <el-form v-if="active===3" key="3">
-          <el-form-item label="input3:">
-            <el-input></el-input>
-          </el-form-item>
-        </el-form>
-<!--      </transition>-->
+      <!--      <transition name="slide-fade">-->
+      <el-form v-if="active===0" key="0">
+        <el-form-item label="input:">
+          <el-input></el-input>
+        </el-form-item>
+      </el-form>
+      <!--      </transition>-->
+      <!--      <transition name="slide-fade">-->
+      <el-form v-if="active===1" key="1">
+        <el-form-item label="input1:">
+          <el-input></el-input>
+        </el-form-item>
+      </el-form>
+      <!--      </transition>-->
+      <!--      <transition name="slide-fade">-->
+      <el-form v-if="active===2" key="2">
+        <el-form-item label="input2:">
+          <el-input></el-input>
+        </el-form-item>
+      </el-form>
+      <!--      </transition>-->
+      <!--      <transition name="slide-fade">-->
+      <el-form v-if="active===3" key="3">
+        <el-form-item label="input3:">
+          <el-input></el-input>
+        </el-form-item>
+      </el-form>
+      <!--      </transition>-->
 
     </template>
     <template v-slot:last>
@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import StepsPane from "@/components/StepsPane.vue";
+import StepsPane from "@/components/base/StepsPane.vue";
 import {AddHttpServiceInput} from "@/repositories/repo";
 import {StepItem} from '@/mixins/model';
 
@@ -59,12 +59,27 @@ export default Vue.extend({
         new StepItem('填写负载均衡信息'),
       ] as StepItem[],
       isError: false,
-      animate: 'slide-fade'
+      animate: 'slide-fade',
+      obj: {
+        input: '',
+        a: ''
+      }
+    }
+  },
+  watch: {
+    obj: {
+      deep: true,
+      handler: function (val,oldVal) {
+        console.log(val)
+        console.log(oldVal)
+
+      }
     }
   },
   methods: {
     change(v: number) {
       this.active = v
+      this.obj.input=v.toString()
     }
   }
 })

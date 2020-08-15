@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import NavBody from '@/components/NavBody.vue'
+import NavBody from '@/components/base/NavBody.vue'
 
 export default Vue.extend({
   name: 'Tenant',

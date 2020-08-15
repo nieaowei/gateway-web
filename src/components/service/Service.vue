@@ -21,19 +21,20 @@
       </el-button>
     </template>
     <template v-slot:content>
-      <BodyTab :body-tab-item="Content.editableTabs" :remove-tab="removeTab" v-on:complete="complete"></BodyTab>
+      <BodyTab v-on:edit-service="editService" :body-tab-item="Content.editableTabs" :remove-tab="removeTab" v-on:complete="complete"></BodyTab>
     </template>
   </NavBody>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import NavBody from '@/components/NavBody.vue'
-import BodyTab from '@/components/BodyTab.vue'
-import HttpPane from '@/components/service/HttpPane.vue'
+import NavBody from '@/components/base/NavBody.vue'
+import BodyTab from '@/components/base/BodyTab.vue'
+import ServiceOpPane,{ServiceOpPaneData} from '@/components/service/SeviceOpPane.vue'
 import {EditTabItem, BodyTabItem} from '@/mixins/model'
-import ServiceListPane from '@/components/service/ServiceListPane.vue'
-import StepsPane from '@/components/StepsPane.vue'
+import ServiceListPane, {ServiceListPaneData} from '@/components/service/ServiceListPane.vue'
+import StepsPane from '@/components/base/StepsPane.vue'
+import {ServiceListItem} from "@/repositories/repo";
 
 export default Vue.extend({
   name: 'Service',
@@ -49,7 +50,7 @@ export default Vue.extend({
             name: '1',
             title: '服务列表',
             component: ServiceListPane,
-            data: ''
+            data: new ServiceListPaneData()
           }
         ] as EditTabItem[])
       }
@@ -57,7 +58,7 @@ export default Vue.extend({
   },
   methods: {
     SearchService(val: string): void {
-      this.Content.editableTabs.editTabs[0].data = val
+      this.Content.editableTabs.editTabs[0].data.input = val
     },
     removeTab(name: string) {
       // if last
@@ -93,25 +94,34 @@ export default Vue.extend({
     addTab(newItem: EditTabItem) {
       const tabs = this.Content.editableTabs
       newItem.name = tabs.nameNum.toString()
-      console.log('num' + tabs.nameNum)
-      console.log(newItem.name)
       tabs.editTabs.push(newItem)
       tabs.nameNum++
       tabs.currentTabIndex = newItem.name
     },
     addHttp() {
-      const newItem = new EditTabItem('', '新建HTTP服务', StepsPane)
-      newItem.data = {data: '9090'} as object
+      const newItem = new EditTabItem('', '新建HTTP服务', ServiceOpPane)
+      newItem.data = new ServiceOpPaneData({type:'http'})
       this.addTab(newItem)
     },
     addGrpc() {
-      this.addTab(new EditTabItem('', '新建GRPC服务', HttpPane))
+      const newItem = new EditTabItem('', '新建GRPC服务', ServiceOpPane)
+      newItem.data = new ServiceOpPaneData({type:'grpc'})
+      this.addTab(newItem)
     },
     addTcp() {
-      this.addTab(new EditTabItem('', '新建TCP服务', HttpPane))
+      const newItem = new EditTabItem('', '新建TCP服务', ServiceOpPane)
+      newItem.data = new ServiceOpPaneData({type:'tcp'})
+      this.addTab(newItem)
     },
     complete(item: EditTabItem) {
       this.removeTab(item.name)
+    },
+    editService(item: ServiceListItem){
+      const newItem = new EditTabItem('', '修改'+item.service_name+'服务', ServiceOpPane)
+      const str = item.load_type?.toLowerCase() as 'tcp' | 'http' | 'grpc' |undefined
+      console.log(str)
+      newItem.data = new ServiceOpPaneData({op:'edit',id:item.id,type: str})
+      this.addTab(newItem)
     }
   }
 })

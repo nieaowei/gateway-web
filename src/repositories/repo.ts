@@ -13,12 +13,25 @@
 
 import globalAxios, {AxiosPromise, AxiosInstance, AxiosStatic} from 'axios'
 
+export class GetServiceDetailInput {
+    service_id?: number
+
+    constructor(id?: number) {
+        this.service_id = id
+    }
+
+    Exec(axios: AxiosStatic): AxiosPromise<Response<any>> {
+        const param = '?service_id=' + this.service_id
+        return axios.get<Response<any>>('/api/service/detail')
+    }
+}
+
 /**
  *
  * @export
  * @interface AddGrpcServiceInput
  */
-export interface AddGrpcServiceInput {
+export class AddGrpcServiceInput {
     /**
      * 服务类型
      * @type {number}
@@ -30,13 +43,13 @@ export interface AddGrpcServiceInput {
      * @type {string}
      * @memberof AddGrpcServiceInput
      */
-    service_name: string;
+    service_name?: string;
     /**
      * 服务描述
      * @type {string}
      * @memberof AddGrpcServiceInput
      */
-    service_desc: string;
+    service_desc?: string;
     /**
      * 开放授权
      * @type {number}
@@ -144,13 +157,16 @@ export interface AddGrpcServiceInput {
      * @type {number}
      * @memberof AddGrpcServiceInput
      */
-    port: number;
+    port?: number;
     /**
      *
      * @type {string}
      * @memberof AddGrpcServiceInput
      */
     header_transfor?: string;
+
+    constructor() {
+    }
 }
 
 /**
@@ -194,13 +210,13 @@ export class AddHttpServiceInput {
      * @type {number}
      * @memberof AddHttpServiceInput
      */
-    need_https?: number;
+    need_https?: number = 0;
     /**
      *
      * @type {number}
      * @memberof AddHttpServiceInput
      */
-    need_strip_uri?: number;
+    need_strip_uri?: number = 0;
     /**
      *
      * @type {number}
@@ -336,7 +352,7 @@ export class AddHttpServiceInput {
  * @export
  * @interface AddTcpServiceInput
  */
-export interface AddTcpServiceInput {
+export class AddTcpServiceInput {
     /**
      * 服务类型
      * @type {number}
@@ -348,13 +364,13 @@ export interface AddTcpServiceInput {
      * @type {string}
      * @memberof AddTcpServiceInput
      */
-    service_name: string;
+    service_name?: string;
     /**
      * 服务描述
      * @type {string}
      * @memberof AddTcpServiceInput
      */
-    service_desc: string;
+    service_desc?: string;
     /**
      * 开放授权
      * @type {number}
@@ -462,7 +478,10 @@ export interface AddTcpServiceInput {
      * @type {number}
      * @memberof AddTcpServiceInput
      */
-    port: number;
+    port?: number;
+
+    constructor() {
+    }
 }
 
 /**

@@ -120,14 +120,14 @@ export default Vue.extend({
   },
   methods: {
     next() {
-      if (this.active + 1 <= this.steps.length) {
+      if (this.active < this.steps.length) {
         this.animateC = this.animateNext
         this.active++
         this.$emit('steps-change', this.active)
       }
     },
     last() {
-      if (this.active - 1 >= 0) {
+      if (this.active >= 0) {
         this.animateC = this.animateLast
         this.active--
         this.$emit('steps-change', this.active)

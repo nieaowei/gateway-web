@@ -8,7 +8,7 @@
                  :name="item.name"
     >
       <component v-bind:is="item.component" :temp-data="item.data"
-                 v-on:complete="complete(item)"></component>
+                 v-on:complete="complete(item)" v-on:edit-service="editService"></component>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -16,6 +16,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import {EditTabItem, BodyTabItem} from '@/mixins/model'
+import {ServiceListItem} from "@/repositories/repo";
 
 export default Vue.extend({
   name: 'BodyTab',
@@ -46,6 +47,9 @@ export default Vue.extend({
   methods: {
     complete(item: EditTabItem) {
       this.$emit('complete', item)
+    },
+    editService(item: ServiceListItem){
+      this.$emit('edit-service',item)
     }
   }
 })

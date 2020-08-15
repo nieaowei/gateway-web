@@ -13,7 +13,7 @@
                     v-model="formData.service_desc"></el-input>
         </el-form-item>
       </el-form>
-      <el-form @submit.native.prevent class="content" v-if="step.active===1" label-width="120px" v-model="formData"
+      <el-form @submit.native.prevent class="content" v-if="step.active===1 && (type==='http')" label-width="120px" v-model="formData"
                label-position="left"
                label-suffix="：" key="11">
         <el-form-item label="接入类型" prop="rule_type">
@@ -25,15 +25,32 @@
           </el-input>
         </el-form-item>
         <el-form-item label="支持类型" prop="rule_type" style="text-align: left;">
-          <el-switch class="add-pane-switch" v-model="formData.need_https" inactive-text="HTTPS"></el-switch>
-          <el-switch class="add-pane-switch" v-model="formData.need_strip_uri" inactive-text="strip_uri"></el-switch>
-          <el-switch class="add-pane-switch" v-model="formData.need_websocket" inactive-text="Websocket"></el-switch>
+          <el-switch class="add-pane-switch" v-model="formData.need_https" :active-value="1" :inactive-value="0" inactive-text="HTTPS"></el-switch>
+          <el-switch class="add-pane-switch" v-model="formData.need_strip_uri" :active-value="1" :inactive-value="0" inactive-text="strip_uri"></el-switch>
+          <el-switch class="add-pane-switch" v-model="formData.need_websocket"  :active-value="1" :inactive-value="0" inactive-text="Websocket"></el-switch>
         </el-form-item>
         <el-form-item label="URL重写" prop="rule_type">
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.url_rewrite"></el-input>
         </el-form-item>
         <el-form-item label="Header转换" prop="rule_type">
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.header_transfor"></el-input>
+        </el-form-item>
+      </el-form>
+      <el-form @submit.native.prevent class="content" v-if="step.active===1 && (type==='tcp')" label-width="120px" v-model="formData"
+               label-position="left"
+               label-suffix="：" key="11">
+        <el-form-item label="URL重写" prop="rule_type">
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.url_rewrite"></el-input>
+        </el-form-item>
+        <el-form-item label="Header转换" prop="rule_type">
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.header_transfor"></el-input>
+        </el-form-item>
+      </el-form>
+      <el-form @submit.native.prevent class="content" v-if="step.active===1 && (type==='grpc')" label-width="120px" v-model="formData"
+               label-position="left"
+               label-suffix="：" key="11">
+        <el-form-item label="URL重写" prop="rule_type">
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.url_rewrite"></el-input>
         </el-form-item>
       </el-form>
       <el-form class="content" @submit.native.prevent v-if="step.active===2" key="12" label-width="98px"
@@ -56,7 +73,7 @@
           <el-input v-model="formData.white_host_name"></el-input>
         </el-form-item>
         <el-form-item label="开启授权" style="text-align: left;">
-          <el-switch class="add-pane-switch" v-model="formData.open_auth"></el-switch>
+          <el-switch class="add-pane-switch" v-model="formData.open_auth" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="content" v-if="step.active===3" label-width="120px" v-model="formData"
@@ -76,7 +93,7 @@
       成功 {{ step.active }}
     </template>
     <template v-slot:error="step">
-      {{ '您在第' + (step.active + 1) + '步失败了' }}
+      {{ '您在第' + (step.active) + '步失败了' }}
     </template>
     <template v-slot:last="step">
       <el-button @click="last(step.active)" type="primary" plain>
@@ -102,12 +119,20 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import StepsPane from '@/components/StepsPane.vue'
+import StepsPane from '@/components/base/StepsPane.vue'
 import {StepItem, TextAreaSize} from '@/mixins/model'
-import {AddHttpServiceInput} from '@/repositories/repo'
+import {AddGrpcServiceInput, AddHttpServiceInput, AddTcpServiceInput, GetServiceDetailInput} from '@/repositories/repo'
 
-class Service {
-  id!: number
+export class ServiceOpPaneData {
+  id?: number
+  type?: 'tcp' | 'http' | 'grpc' |undefined= 'grpc'
+  op?: 'edit' | 'add' = 'add'
+
+  constructor(addPaneData: ServiceOpPaneData) {
+    this.id = addPaneData.id
+    this.type = addPaneData.type
+    this.op = addPaneData.op
+  }
 }
 
 const DefaultTextArea = new TextAreaSize()
@@ -117,23 +142,31 @@ export default Vue.extend({
   components: {StepsPane},
   props: {
     tempData: {
-      type: Object
+      type: ServiceOpPaneData,
+      default: ()=> new ServiceOpPaneData({type:'grpc'})
     }
   },
   data() {
     return {
       DefaultTextArea: DefaultTextArea,
-      service: this.tempData as Service,
-      formData: new AddHttpServiceInput(),
+      formData: this.tempData.type === 'http'?new AddHttpServiceInput():(this.tempData.type==='tcp'?new AddTcpServiceInput():new AddGrpcServiceInput()),
       active: 0,
       stepsItems: [
         new StepItem('填写服务信息'),
-        new StepItem('填写服务详细'),
+        new StepItem('填写服务详细信息'),
         new StepItem('填写访问控制信息'),
         new StepItem('填写负载均衡信息'),
       ] as StepItem[],
       isError: false,
       animate: 'slide-fade'
+    }
+  },
+  computed:{
+    type:function (): "tcp" | "http" | "grpc" | undefined {
+      if (this.tempData!=undefined){
+        return this.tempData.type
+      }
+      return undefined
     }
   },
   directives: {
@@ -154,27 +187,47 @@ export default Vue.extend({
       }
     }
   },
+  created() {
+    // 如果是edit操作
+    if (this.tempData !== null && this.tempData != undefined) {
+      if (this.tempData.op==="edit"){
+        //去网络操作获取数据
+        new GetServiceDetailInput(this.tempData.id).Exec(this.$axios).then(
+            value => {
+              if(value.data.errno ===0){
+                if (this.tempData.type==='http'){
+                  this.formData = value.data.data as AddHttpServiceInput
+                }
+              }
+            }
+        )
+      }
+    }
+  },
   methods: {
     stepsChange(val: number) {
       this.active = val
     },
     submit() {
-      alert('submit')
-      // this.stepsItems[this.stepsItems.length - 1].status = 'error'
+      // alert('submit')
+      this.$set(this.stepsItems[this.stepsItems.length-1],'status','error')
+
+      // this.stepsItems[2].status = 'error'
     },
     complete() {
       // 发射信号出去告知tab 改标签页已完成 可以关闭 或 进行其他操作
       this.$emit('complete')
     },
     next(active: number) {
-      console.log(active)
+      // this.$set(this.stepsItems[1],'status','error')
+      // console.log(active)
       // this.animate = "slide-fade"
-      this.stepsItems[1].status = 'error'
+      // this.stepsItems[1].status = 'error'
     },
     last() {
       // this.animate = "slide-fade-back"
     },
-  }
+  },
 })
 </script>
 
@@ -188,14 +241,6 @@ export default Vue.extend({
 .slide-fade-enter
   transform: translateX(300px);
   opacity: 0;
-
-//.slide-fade-leave-active
-//  transition: all 0.5s ease
-//
-//.slide-fade-leave-to
-//  transform: translateX(-300px);
-//  opacity: 0;
-
 
 .add-pane-switch
   margin-right 1em
