@@ -86,10 +86,9 @@
             </el-dropdown>
           </div>
         </div>
-        <transition name="slide-fade">
+        <transition name="slide-fade" mode="out-in">
           <router-view></router-view>
         </transition>
-        <!--        <component v-bind:is="Main.currentComponent"></component>-->
       </div>
     </el-col>
   </el-row>
@@ -147,18 +146,8 @@ export default Vue.extend({
   created() {
     // router and mune
     if (this.$router.currentRoute.name !== null && this.$router.currentRoute.name !== HomeRouter.name) {
-      console.log(TenantRouter.path)
-
-      console.log(this.$router.currentRoute.path)
       this.HomeSideBar.defaultRouter = this.$router.currentRoute.name
     }
-    //
-    // if (this.$router.currentRoute.path !== HomeRouter.path && this.$router.currentRoute.path !== RootRouter.path) {
-    //   this.HomeSideBar.defaultRouter = this.$router.currentRoute.path
-    // }
-    // } else {
-    //   this.$router.push(DashboardRouter)
-    // }
   },
   methods: {
     toggleSideBar(): void {
@@ -269,14 +258,5 @@ export default Vue.extend({
   justify-content flex-start
   height 100%
 
-.slide-fade-enter-active
-  transition: all 2s ease
-
-//.slide-fade-leave-active
-//  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
-
-.slide-fade-enter
-  transform: translateX(200px);
-  opacity: 0;
 
 </style>

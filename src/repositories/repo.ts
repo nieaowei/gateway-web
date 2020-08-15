@@ -164,7 +164,7 @@ export class AddHttpServiceInput {
      * @type {number}
      * @memberof AddHttpServiceInput
      */
-    load_type?: number;
+    load_type?: number = 0;
     /**
      * 服务名称
      * @type {string}
@@ -182,7 +182,7 @@ export class AddHttpServiceInput {
      * @type {number}
      * @memberof AddHttpServiceInput
      */
-    rule_type?: number;
+    rule_type?: number = 0;
     /**
      * 规则
      * @type {string}
@@ -325,6 +325,10 @@ export class AddHttpServiceInput {
     Exec(axios: AxiosStatic): AxiosPromise<Response<any>> {
         return axios.get<Response<any>>('/api/admin/logout')
     }
+
+    constructor() {
+    }
+
 }
 
 /**

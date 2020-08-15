@@ -5,8 +5,17 @@ import Service from '@/components/service/Service.vue'
 import Dashboard from '@/components/dashboard/Dashboard.vue'
 import Tenant from '@/components/tenant/Tenant.vue'
 import Index from '@/views/Index.vue'
+import Test from "@/views/Test.vue";
 
 Vue.use(VueRouter)
+export const TestRouter = {
+    path: '/test',
+    name: 'Test',
+    component: Test,
+    meta: {
+        title: '租户管理-管理中心'
+    }
+} as RouteConfig
 
 export const TenantRouter = {
     path: 'tenant',
@@ -83,7 +92,8 @@ const routes: Array<RouteConfig> = [
     RootRouter,
     LoginRouter,
     HomeRouter,
-    AboutRouter
+    AboutRouter,
+    TestRouter
 ]
 
 const router = new VueRouter({

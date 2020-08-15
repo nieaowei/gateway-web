@@ -45,5 +45,15 @@ export class ColSize {
 
 export class StepItem {
     title!: string
-    status: 'wait' | 'process' | 'finish' | 'error' | 'success' = 'process'
+    status?: 'wait' | 'error' | 'success' = undefined
+
+    constructor(t: string) {
+        this.title = t
+    }
+
+}
+
+export class TextAreaSize{
+    minRows: number = 3
+    maxRows: number = 10
 }

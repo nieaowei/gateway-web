@@ -18,9 +18,9 @@
               </el-avatar>
             </el-col>
             <el-col :span="10">
-              <el-form :model="loginForm" status-icon style="margin-top: 10%;">
+              <el-form @submit.native.prevent :model="loginForm" status-icon style="margin-top: 10%;">
                 <el-form-item prop="username" :rules="[{required:true,message:'用户名不能为空',trigger: 'blur'}]">
-                  <el-input v-on:keyup.enter.native="login" class="unInput" type="username" v-model="loginForm.username" placeholder="请输入用户名"
+                  <el-input class="unInput" type="username" v-model="loginForm.username" placeholder="请输入用户名"
                             prefix-icon="el-icon-user" v-on:blur="getAvatar"/>
                 </el-form-item>
                 <el-form-item class="pdInput" prop="password"

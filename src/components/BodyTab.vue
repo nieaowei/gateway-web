@@ -7,7 +7,7 @@
                  :label="item.title"
                  :name="item.name"
     >
-      <component v-bind:is="item.component" mode="out-in" :temp-data="item.data"
+      <component v-bind:is="item.component" :temp-data="item.data"
                  v-on:complete="complete(item)"></component>
     </el-tab-pane>
   </el-tabs>
@@ -52,13 +52,13 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="stylus">
-.slide-fade-enter-active
-  transition: all 2s ease
+//.slide-fade-enter-active
+//  transition: all 2s ease
 
 //.slide-fade-leave-active
 //  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
 
-.slide-fade-enter
-  transform: translateX(200px);
-  opacity: 0;
+//.slide-fade-enter
+//  transform: translateX(200px);
+//  opacity: 0;
 </style>

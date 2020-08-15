@@ -11,6 +11,10 @@
 <!-- - steps-change ， 步骤条发生改变事将索引index发射出去-->
 <!--props：-->
 <!-- - steps 步骤条相关数组-->
+<!-- -nextAnimate 下一步切换动画 不填则为默认-->
+<!-- -lastAnimate 上一步切换动画 不填则为默认-->
+<!--bind：-->
+<!-- - active 插槽数据传递 ， 将激活索引传递给相应的插槽-->
 <template>
   <div class="step-body">
     <div class="step-header">
@@ -21,23 +25,42 @@
       </el-steps>
     </div>
     <div class="step-content">
-      <slot name="content" v-if="active!==steps.length && !isError"/>
-      <slot name="success" v-if="active===steps.length && !isError"/>
-      <slot name="error" v-if="isError"/>
+      <transition :name="animateC" mode="out-in">
+        <slot name="content" v-if="active!==steps.length && !isError" v-bind:active="active" />
+      </transition>
+
+      <div class="step-content-success" v-if="active===steps.length && !isError" key="success">
+        <slot name="success" v-bind:active="active"/>
+      </div>
+      <div class="step-content-error" v-if="isError" key="error">
+        <slot name="error" v-bind:active="active"/>
+      </div>
     </div>
     <div class="step-footer">
-      <div class="footer-button" @click="last" v-if="active>0 && active<steps.length && !isError">
-        <slot name="last"></slot>
-      </div>
-      <div class="footer-button" @click="next" v-if="active<steps.length-1 && !isError">
-        <slot name="next"></slot>
-      </div>
-      <div class="footer-button" @click="next" v-if="active === steps.length-1 && !isError">
-        <slot name="submit"></slot>
-      </div>
-      <div class="footer-button" @click="complete" v-if="active === steps.length || isError">
-        <slot name="complete"></slot>
-      </div>
+
+      <transition :name="animateC" mode="out-in">
+        <div class="footer-button" @click="last" v-if="active>0 && active<steps.length && !isError" key="1">
+          <slot name="last" v-bind:active="active"/>
+        </div>
+      </transition>
+
+      <transition :name="animateC" mode="out-in">
+        <div class="footer-button" @click="next" v-if="active<steps.length-1 && !isError" key="2">
+          <slot name="next" v-bind:active="active"/>
+        </div>
+        <div class="footer-button" @click="next" v-if="active === steps.length-1 && !isError" key="3">
+          <slot name="submit" v-bind:active="active"/>
+        </div>
+        <div class="footer-button" @click="complete" v-if="active === steps.length || isError" key="4">
+          <slot name="complete" v-bind:active="active">
+            <el-button :type="completeStatus" plain>
+              <v-icon name="times" scale="0.8"/>
+              关闭
+            </el-button>
+          </slot>
+        </div>
+      </transition>
+
     </div>
   </div>
 
@@ -45,51 +68,72 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { StepItem } from '@/mixins/model'
+import {StepItem} from '@/mixins/model'
 
 export default Vue.extend({
   name: 'StepsPane',
   props: {
     steps: {
       type: Array,
-      default: () => [{ title: '123' }, { title: '321' }] as StepItem[]
-    }
+      default: () => [{title: '123'}, {title: '321'}] as StepItem[]
+    },
+    nextAnimate: {
+      type: String,
+      default: () => ''
+    },
+    lastAnimate: {
+      type: String,
+      default: () => ''
+    },
   },
-  data () {
+  data() {
     return {
       active: 0,
       isError: false,
-      stepsItems: this.steps
+      animateC: 'step-slide-fade',
+    }
+  },
+  computed: {
+    completeStatus: function (): string {
+      return this.isError ? 'danger' : 'success'
+    },
+    animateNext: function (): string {
+      return this.nextAnimate===''? 'step-slide-fade':this.nextAnimate
+    },
+    animateLast: function (): string {
+      return this.lastAnimate===''? 'step-slide-back':this.lastAnimate
     }
   },
   watch: {
     steps: {
       handler: function (val, newVal) {
         const v = val as StepItem[]
+        console.log(val)
         v.some(value => {
           if (value.status === 'error') {
             this.isError = true
           }
         })
       },
-      deep: true,
-      immediate: true
+      deep: true
     }
   },
   methods: {
-    next () {
+    next() {
       if (this.active + 1 <= this.steps.length) {
+        this.animateC = this.animateNext
         this.active++
         this.$emit('steps-change', this.active)
       }
     },
-    last () {
+    last() {
       if (this.active - 1 >= 0) {
+        this.animateC = this.animateLast
         this.active--
         this.$emit('steps-change', this.active)
       }
     },
-    complete () {
+    complete() {
       this.$emit('complete')
     }
   }
@@ -98,10 +142,14 @@ export default Vue.extend({
 
 <style scoped lang="stylus">
 .step-body
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
 
 .step-header
   margin-top 1em
-  width 100%
+  width 80%
 
 .step-content
   width 100%
@@ -112,9 +160,28 @@ export default Vue.extend({
   margin-top 2em
 
 .step-footer
+  width 100%
   margin-top 1em
 
 .footer-button
   margin 0.5em
   display inline
+
+.step-slide-back-enter-active
+.step-slide-back-leave-active
+.step-slide-fade-enter-active
+.step-slide-fade-leave-active
+  transition: all 0.5s ease
+
+.step-slide-back-leave-to
+.step-slide-fade-enter
+  transform: translateX(100px);
+  opacity: 0;
+
+
+.step-slide-back-enter
+.step-slide-fade-leave-to
+  transform: translateX(-300px);
+  opacity: 0;
+
 </style>
