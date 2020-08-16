@@ -30,7 +30,11 @@
 import Vue from 'vue'
 import NavBody from '@/components/base/NavBody.vue'
 import BodyTab from '@/components/base/BodyTab.vue'
-import ServiceOpPane,{ServiceOpPaneData} from '@/components/service/SeviceOpPane.vue'
+import ServiceOpPane, {
+  ServiceOpPaneData,
+  ServiceOpPaneOp,
+  ServiceOpPaneType
+} from '@/components/service/SeviceOpPane.vue'
 import {EditTabItem, BodyTabItem} from '@/mixins/model'
 import ServiceListPane, {ServiceListPaneData} from '@/components/service/ServiceListPane.vue'
 import StepsPane from '@/components/base/StepsPane.vue'
@@ -100,17 +104,17 @@ export default Vue.extend({
     },
     addHttp() {
       const newItem = new EditTabItem('', '新建HTTP服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type:'http'})
+      newItem.data = new ServiceOpPaneData({type:ServiceOpPaneType.HTTP})
       this.addTab(newItem)
     },
     addGrpc() {
       const newItem = new EditTabItem('', '新建GRPC服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type:'grpc'})
+      newItem.data = new ServiceOpPaneData({type:ServiceOpPaneType.GRPC})
       this.addTab(newItem)
     },
     addTcp() {
       const newItem = new EditTabItem('', '新建TCP服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type:'tcp'})
+      newItem.data = new ServiceOpPaneData({type:ServiceOpPaneType.TCP})
       this.addTab(newItem)
     },
     complete(item: EditTabItem) {
@@ -118,8 +122,8 @@ export default Vue.extend({
     },
     editService(item: ServiceListItem){
       const newItem = new EditTabItem('', '修改'+item.service_name+'服务', ServiceOpPane)
-      const str = item.load_type?.toLowerCase() as 'tcp' | 'http' | 'grpc' |undefined
-      newItem.data = new ServiceOpPaneData({op:'edit',id:item.id,type: str})
+      const str = item.load_type?.toLowerCase() as ServiceOpPaneType
+      newItem.data = new ServiceOpPaneData({op:ServiceOpPaneOp.EDIT,id:item.id,type: str})
       this.addTab(newItem)
     }
   }

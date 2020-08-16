@@ -157,13 +157,13 @@ export class AddGrpcServiceInput {
      * @type {number}
      * @memberof AddGrpcServiceInput
      */
-    port?: number;
+    grpc_port?: number;
     /**
      *
      * @type {string}
      * @memberof AddGrpcServiceInput
      */
-    header_transfor?: string;
+    grpc_header_transfor?: string;
 
     constructor() {
     }
