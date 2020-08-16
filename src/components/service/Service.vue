@@ -119,7 +119,6 @@ export default Vue.extend({
     editService(item: ServiceListItem){
       const newItem = new EditTabItem('', '修改'+item.service_name+'服务', ServiceOpPane)
       const str = item.load_type?.toLowerCase() as 'tcp' | 'http' | 'grpc' |undefined
-      console.log(str)
       newItem.data = new ServiceOpPaneData({op:'edit',id:item.id,type: str})
       this.addTab(newItem)
     }

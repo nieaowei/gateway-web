@@ -22,7 +22,7 @@ export class GetServiceDetailInput {
 
     Exec(axios: AxiosStatic): AxiosPromise<Response<any>> {
         const param = '?service_id=' + this.service_id
-        return axios.get<Response<any>>('/api/service/detail')
+        return axios.get<Response<any>>('/api/service/detail' + param)
     }
 }
 

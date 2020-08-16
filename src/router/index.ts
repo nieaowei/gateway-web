@@ -50,7 +50,8 @@ export const RootRouter = {
     component: Index,
     meta: {
         title: '首页'
-    }
+    },
+    redirect: to => DashboardRouter
     // children: [
     //   ServiceRouter,
     //   DashboardRouter,
