@@ -1,12 +1,18 @@
+import Vuex from 'vuex'
+import {AdminInfoOutput} from "@/repositories/repo";
 let modulePublic
 
-export default modulePublic = {
+export default modulePublic  = {
   namespaced: true,
   state: {
     loading: true,
-    currentUsername: ''
+    adminInfo: new AdminInfoOutput()
   },
   getters: {},
-  mutations: {},
+  mutations: {
+    setAdminInfo(state: any,adminInfo: AdminInfoOutput){
+      state.adminInfo = adminInfo
+    }
+  },
   actions: {}
 }

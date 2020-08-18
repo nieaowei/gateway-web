@@ -9,8 +9,7 @@
           <el-input v-focus v-model="formData.service_name"></el-input>
         </el-form-item>
         <el-form-item label="服务描述" prop="service_desc">
-          <el-input type="textarea" :autosize="DefaultTextArea"
-                    v-model="formData.service_desc"></el-input>
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.service_desc"/>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="content" v-if="step.active===1 && (type===ServiceOpPaneType.HTTP)"

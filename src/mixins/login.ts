@@ -15,6 +15,7 @@ export default Vue.extend({
                     if (this.$router.currentRoute.path !== LoginRouter.path) {
                         this.$router.push(LoginRouter)
                         this.$message({message: '您尚未登录', type: 'warning'})
+                        return
                     }
                     return
                 }
@@ -22,7 +23,10 @@ export default Vue.extend({
                 if (this.$router.currentRoute.path === LoginRouter.path) {
                     this.$message({message: '您已经登录', type: 'success'})
                     this.$router.push(HomeRouter)
+                    return;
                 }
+                this.$store.commit('public/setAdminInfo',value.data.data)
+                return;
             }
         ).catch(
             reason => {

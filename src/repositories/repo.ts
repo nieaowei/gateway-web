@@ -13,6 +13,20 @@
 
 import globalAxios, {AxiosPromise, AxiosInstance, AxiosStatic} from 'axios'
 
+export class GetAvatarInput{
+    username!: string
+    constructor(u:string) {
+        this.username = u
+    }
+    Exec(axios: AxiosStatic): AxiosPromise<Response<GetAvatarOutput>>{
+        const params = '?username='+this.username
+        return axios.get<Response<GetAvatarOutput>>('/api/public/get/avatar'+params)
+    }
+}
+export class GetAvatarOutput{
+    avatar!: string
+}
+
 export class GetServiceDetailInput {
     service_id?: number
 
@@ -543,19 +557,19 @@ export class AdminLoginInput {
      * @type {string}
      * @memberof AdminLoginInput
      */
-    username?: string;
+    username!: string;
     /**
      * 密码
      * @type {string}
      * @memberof AdminLoginInput
      */
-    password?: string;
+    password!: string;
 
     Exec(axios: AxiosStatic): AxiosPromise<InlineResponse2002> {
         return axios.post<InlineResponse2002>('/api/admin/login', this)
     }
 
-    constructor(u?: string, p?: string) {
+    constructor(u: string, p: string) {
         this.username = u
         this.password = p
     }

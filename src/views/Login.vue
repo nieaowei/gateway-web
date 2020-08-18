@@ -25,7 +25,8 @@
                 </el-form-item>
                 <el-form-item class="pdInput" prop="password"
                               :rules="[{required:true,message:'密码不能为空',trigger: 'blur'}]">
-                  <el-input v-on:keyup.enter.native="login" type="password" v-model="loginForm.password" placeholder="请输入密码" prefix-icon="el-icon-lock"
+                  <el-input v-on:keyup.enter.native="login" type="password" v-model="loginForm.password"
+                            placeholder="请输入密码" prefix-icon="el-icon-lock"
                             show-password/>
                 </el-form-item>
                 <el-button type="primary" v-on:click="login" icon="el-icon-circle-check">登录</el-button>
@@ -44,17 +45,17 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { AdminLoginInput } from '@/repositories/repo'
+import {AdminLoginInput, GetAvatarInput} from '@/repositories/repo'
 import login from '@/mixins/login'
-import { HomeRouter } from '@/router'
+import {HomeRouter} from '@/router'
 
 export default Vue.extend({
   name: 'Login',
   mixins: [login],
   components: {},
-  data () {
+  data() {
     return {
-      loginForm: new AdminLoginInput(),
+      loginForm: new AdminLoginInput('', ''),
       LoginCard: {
         avatar: {
           src: '',
@@ -64,33 +65,41 @@ export default Vue.extend({
     }
   },
   methods: {
-    login (): void {
-      this.$store.commit('setLoading', { enable: true, text: '正在登录中......' })
+    login(): void {
+      this.$store.commit('setLoading', {enable: true, text: '正在登录中......'})
       this.loginForm.Exec(this.$axios).then(
-        value => {
-          if (value.data.errno === 0) {
-            this.$message({ message: '登录成功', type: 'success' })
-            this.$router.push(HomeRouter)
-            return
+          value => {
+            if (value.data.errno === 0) {
+              this.$message({message: '登录成功', type: 'success'})
+              this.$router.push(HomeRouter)
+              return
+            }
+            this.$message({message: value.data.errmsg, type: 'error'})
           }
-          this.$message({ message: value.data.errmsg, type: 'error' })
-        }
       ).catch(
-        reason => {
-          this.$message({ message: reason, type: 'error' })
-        }
+          reason => {
+            this.$message({message: reason, type: 'error'})
+          }
       ).finally(
-        () => {
-          this.$store.commit('setLoading', { enable: false, text: '' })
-        }
+          () => {
+            this.$store.commit('setLoading', {enable: false, text: ''})
+          }
       )
     },
-    getAvatar (): void {
+    getAvatar(): void {
       this.LoginCard.avatar.spin = true
-      setTimeout(() => {
-        this.LoginCard.avatar.src = 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
-        this.LoginCard.avatar.spin = false
-      }, 2000)
+      new GetAvatarInput(this.loginForm.username).Exec(this.$axios).then(
+          value => {
+            if (value.data.errno === 0) {
+              this.LoginCard.avatar.src = value.data.data.avatar
+              return
+            }
+          }
+      ).finally(
+          () => {
+            this.LoginCard.avatar.spin = false
+          }
+      )
     }
   }
 })
@@ -100,8 +109,10 @@ export default Vue.extend({
 <style scoped lang="stylus">
 .blank
   min-height 1em
+
 .login-card
   margin-top 20%
+
 .login-avatar
   background-color #226bb5
 </style>
