@@ -46,7 +46,7 @@
                label-position="left"
                label-suffix="：" key="11">
         <el-form-item label="端口号" prop="rule_type">
-          <el-input v-focus v-model="formData.port"></el-input>
+          <el-input v-focus v-model.number="formData.port"></el-input>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="content" v-if="step.active===1 && (type===ServiceOpPaneType.GRPC)"
@@ -55,7 +55,7 @@
                label-position="left"
                label-suffix="：" key="11">
         <el-form-item label="端口号" prop="rule_type">
-          <el-input v-focus v-model="formData.grpc_port"></el-input>
+          <el-input v-focus v-model.number="formData.grpc_port"></el-input>
         </el-form-item>
         <el-form-item label="URL重写" prop="rule_type">
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.grpc_header_transfor"></el-input>
@@ -72,10 +72,10 @@
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.black_list"></el-input>
         </el-form-item>
         <el-form-item label="客户端限流">
-          <el-input v-model="formData.clientip_flow_limit"></el-input>
+          <el-input v-model.number="formData.clientip_flow_limit"></el-input>
         </el-form-item>
         <el-form-item label="服务端限流">
-          <el-input v-model="formData.service_flow_limit"></el-input>
+          <el-input v-model.number="formData.service_flow_limit"></el-input>
         </el-form-item>
         <el-form-item label="主机白名单">
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.white_host_name"></el-input>
@@ -130,7 +130,12 @@
 import Vue from 'vue'
 import StepsPane from '@/components/base/StepsPane.vue'
 import {StepItem, TextAreaSize} from '@/mixins/model'
-import {AddGrpcServiceInput, AddHttpServiceInput, AddTcpServiceInput, GetServiceDetailInput} from '@/repositories/repo'
+import ApiExec, {
+  AddGrpcServiceInput,
+  AddHttpServiceInput,
+  AddTcpServiceInput,
+  GetServiceDetailInput
+} from '@/repositories/repo'
 
 export enum ServiceOpPaneType {
   TCP = 'tcp',
@@ -214,21 +219,20 @@ export default Vue.extend({
     if (this.tempData !== null && this.tempData != undefined) {
       if (this.tempData.op === ServiceOpPaneOp.EDIT) {
         //去网络操作获取数据
-        new GetServiceDetailInput(this.tempData.id).Exec(this.$axios).then(
+        ApiExec<never>(this.$axios, new GetServiceDetailInput(this.tempData.id)).then(
             value => {
-              if (value.data.errno === 0) {
-                if (this.tempData.type === ServiceOpPaneType.HTTP) {
-                  this.formData = value.data.data as AddHttpServiceInput
-                }
-                if (this.tempData.type === ServiceOpPaneType.GRPC) {
-                  this.formData = value.data.data as AddGrpcServiceInput
-                }
-                if (this.tempData.type === ServiceOpPaneType.TCP) {
-                  this.formData = value.data.data as AddTcpServiceInput
-                }
+              if (this.tempData.type === ServiceOpPaneType.HTTP) {
+                this.formData = value as AddHttpServiceInput
+              }
+              if (this.tempData.type === ServiceOpPaneType.GRPC) {
+                this.formData = value as AddGrpcServiceInput
+              }
+              if (this.tempData.type === ServiceOpPaneType.TCP) {
+                this.formData = value as AddTcpServiceInput
               }
             }
         )
+
       }
     }
   },
@@ -237,10 +241,102 @@ export default Vue.extend({
       this.active = val
     },
     submit() {
-      // alert('submit')
-      this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
-
+      // console.log(this.tempData)
+      // this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
       // this.stepsItems[2].status = 'error'
+      if (this.tempData.op === ServiceOpPaneOp.ADD) {
+        if (this.tempData.type === ServiceOpPaneType.HTTP) {
+          console.log('http add')
+          const exec = this.formData as AddHttpServiceInput
+          ApiExec<string>(this.$axios, exec).then(
+              value => {
+                // yes todo
+                this.$message.success('增加成功')
+              }
+          ).catch(
+              reason => {
+                console.log(reason)
+                this.$message.error('增加失败')
+              }
+          )
+          return;
+        }
+        if (this.tempData.type === ServiceOpPaneType.TCP) {
+          const exec = this.formData as AddHttpServiceInput
+          ApiExec<string>(this.$axios, exec).then(
+              value => {
+                // yes todo
+                this.$message.success('增加成功')
+              }
+          ).catch(
+              reason => {
+                this.$message.error('增加失败')
+              }
+          )
+          return;
+        }
+        if (this.tempData.type === ServiceOpPaneType.GRPC) {
+          const exec = this.formData as AddHttpServiceInput
+          ApiExec<string>(this.$axios, exec).then(
+              value => {
+                // yes todo
+                this.$message.success('增加成功')
+              }
+          ).catch(
+              reason => {
+                this.$message.error('增加失败')
+              }
+          )
+          return;
+        }
+        return
+      }
+      if (this.tempData.op === ServiceOpPaneOp.EDIT) {
+        if (this.tempData.type === ServiceOpPaneType.HTTP) {
+          const exec = this.formData as AddHttpServiceInput
+          ApiExec<string>(this.$axios, exec).then(
+              value => {
+                // yes todo
+                this.$message.success('增加成功')
+              }
+          ).catch(
+              reason => {
+                this.$message.error('增加失败')
+              }
+          )
+          return;
+        }
+        if (this.tempData.type === ServiceOpPaneType.TCP) {
+          const exec = this.formData as AddHttpServiceInput
+          ApiExec<string>(this.$axios, exec).then(
+              value => {
+                // yes todo
+                this.$message.success('增加成功')
+              }
+          ).catch(
+              reason => {
+                this.$message.error('增加失败')
+              }
+          )
+          return;
+        }
+        if (this.tempData.type === ServiceOpPaneType.GRPC) {
+          const exec = this.formData as AddHttpServiceInput
+          ApiExec<string>(this.$axios, exec).then(
+              value => {
+                // yes todo
+                this.$message.success('增加成功')
+              }
+          ).catch(
+              reason => {
+                this.$message.error('增加失败')
+              }
+          )
+          return;
+        }
+        return;
+      }
+
     },
     complete() {
       // 发射信号出去告知tab 改标签页已完成 可以关闭 或 进行其他操作

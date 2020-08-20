@@ -36,7 +36,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {DeleteServiceInput, GetServiceListInput, ServiceListItem, ServiceListOutput} from '@/repositories/repo'
+import ApiExec, {
+  DeleteServiceInput,
+  GetServiceListInput,
+  GetServiceListOutput,
+  ServiceListItem,
+} from '@/repositories/repo'
 
 export class ServiceListPaneData {
   input = ''
@@ -55,7 +60,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      serviceData: {} as ServiceListOutput,
+      serviceData: {} as GetServiceListOutput,
       loading: false,
       query: new GetServiceListInput(1, 10, ''),
       tableHeight: document.documentElement.clientHeight - 50 - 62 - 41 - 16 - 32 - 50 - 30
@@ -93,16 +98,14 @@ export default Vue.extend({
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this
       this.loading = true
-      this.query.Exec(this.$axios).then(
+      ApiExec<GetServiceListOutput>(this.$axios,this.query).then(
           value => {
-            if (value.data.errno === 0) {
-              this.serviceData = value.data.data
-              this.$message({type: 'success', message: '获取成功'})
-            }
+            this.serviceData = value
+            this.$message({type: 'success', message: '获取成功'})
           }
       ).catch(
           reason => {
-            this.$message({type: 'error', message: '网络错误'})
+            this.$message({type: 'error', message: reason})
           }
       ).finally(
           () => {
@@ -113,15 +116,11 @@ export default Vue.extend({
       )
     },
     deleteService(service: ServiceListItem) {
-      new DeleteServiceInput(service.id).Exec(this.$axios).then(
+      ApiExec<string>(this.$axios,new DeleteServiceInput(service.id)).then(
           value => {
-            if (value.data.errno === 0) {
-              this.$message.success('删除成功')
-              const index = this.serviceData.list.indexOf(service)
-              this.serviceData.list.splice(index, 1)
-              return
-            }
-            this.$message.error(value.data.errmsg)
+            this.$message.success('删除成功')
+            const index = this.serviceData.list.indexOf(service)
+            this.serviceData.list.splice(index, 1)
           }
       ).catch(
           reason => {

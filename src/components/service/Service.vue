@@ -21,7 +21,8 @@
       </el-button>
     </template>
     <template v-slot:content>
-      <BodyTab v-on:edit-service="editService" :body-tab-item="Content.editableTabs" :remove-tab="removeTab" v-on:complete="complete"></BodyTab>
+      <BodyTab v-on:edit-service="editService" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
+               v-on:complete="complete"></BodyTab>
     </template>
   </NavBody>
 </template>
@@ -35,9 +36,8 @@ import ServiceOpPane, {
   ServiceOpPaneOp,
   ServiceOpPaneType
 } from '@/components/service/SeviceOpPane.vue'
-import {EditTabItem, BodyTabItem} from '@/mixins/model'
+import {BodyTabItem, EditTabItem} from '@/mixins/model'
 import ServiceListPane, {ServiceListPaneData} from '@/components/service/ServiceListPane.vue'
-import StepsPane from '@/components/base/StepsPane.vue'
 import {ServiceListItem} from "@/repositories/repo";
 
 export default Vue.extend({
@@ -104,26 +104,26 @@ export default Vue.extend({
     },
     addHttp() {
       const newItem = new EditTabItem('', '新建HTTP服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type:ServiceOpPaneType.HTTP})
+      newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.HTTP, op: ServiceOpPaneOp.ADD})
       this.addTab(newItem)
     },
     addGrpc() {
       const newItem = new EditTabItem('', '新建GRPC服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type:ServiceOpPaneType.GRPC})
+      newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.GRPC, op: ServiceOpPaneOp.ADD})
       this.addTab(newItem)
     },
     addTcp() {
       const newItem = new EditTabItem('', '新建TCP服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type:ServiceOpPaneType.TCP})
+      newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.TCP, op: ServiceOpPaneOp.ADD})
       this.addTab(newItem)
     },
     complete(item: EditTabItem) {
       this.removeTab(item.name)
     },
-    editService(item: ServiceListItem){
-      const newItem = new EditTabItem('', '修改'+item.service_name+'服务', ServiceOpPane)
+    editService(item: ServiceListItem) {
+      const newItem = new EditTabItem('', '修改' + item.service_name + '服务', ServiceOpPane)
       const str = item.load_type?.toLowerCase() as ServiceOpPaneType
-      newItem.data = new ServiceOpPaneData({op:ServiceOpPaneOp.EDIT,id:item.id,type: str})
+      newItem.data = new ServiceOpPaneData({op: ServiceOpPaneOp.EDIT, id: item.id, type: str})
       this.addTab(newItem)
     }
   }

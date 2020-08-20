@@ -45,7 +45,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {AdminLoginInput, GetAvatarInput} from '@/repositories/repo'
+import ApiExec, {AdminLoginInput, AdminLoginOutput, GetAvatarInput, GetAvatarOutput} from '@/repositories/repo'
 import login from '@/mixins/login'
 import {HomeRouter} from '@/router'
 
@@ -55,7 +55,7 @@ export default Vue.extend({
   components: {},
   data() {
     return {
-      loginForm: new AdminLoginInput('', ''),
+      loginForm: new AdminLoginInput(),
       LoginCard: {
         avatar: {
           src: '',
@@ -67,18 +67,14 @@ export default Vue.extend({
   methods: {
     login(): void {
       this.$store.commit('setLoading', {enable: true, text: '正在登录中......'})
-      this.loginForm.Exec(this.$axios).then(
+      ApiExec<AdminLoginOutput>(this.$axios,this.loginForm).then(
           value => {
-            if (value.data.errno === 0) {
-              this.$message({message: '登录成功', type: 'success'})
-              this.$router.push(HomeRouter)
-              return
-            }
-            this.$message({message: value.data.errmsg, type: 'error'})
+            this.$message({message: '登录成功', type: 'success'})
+            this.$router.push(HomeRouter)
           }
       ).catch(
           reason => {
-            this.$message({message: reason, type: 'error'})
+            this.$message.error(reason)
           }
       ).finally(
           () => {
@@ -88,12 +84,13 @@ export default Vue.extend({
     },
     getAvatar(): void {
       this.LoginCard.avatar.spin = true
-      new GetAvatarInput(this.loginForm.username).Exec(this.$axios).then(
+      ApiExec<GetAvatarOutput>(this.$axios, new GetAvatarInput(this.loginForm.username)).then(
           value => {
-            if (value.data.errno === 0) {
-              this.LoginCard.avatar.src = value.data.data.avatar
-              return
-            }
+            this.LoginCard.avatar.src = value.avatar
+          }
+      ).catch(
+          reason => {
+            this.$message.error(reason)
           }
       ).finally(
           () => {

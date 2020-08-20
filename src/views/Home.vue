@@ -98,7 +98,7 @@
 import Vue from 'vue'
 import login from '@/mixins/login'
 import Service from '@/components/service/Service.vue'
-import {AdminLogoutInput} from '@/repositories/repo'
+import ApiExec, {AdminLogoutInput} from '@/repositories/repo'
 import {DashboardRouter, HomeRouter, LoginRouter, RootRouter, ServiceRouter, TenantRouter} from '@/router'
 import {ColSize} from '@/mixins/model'
 
@@ -166,12 +166,14 @@ export default Vue.extend({
     handleCommand(cmd: string) {
       switch (cmd) {
         case 'exit': {
-          new AdminLogoutInput().Exec(this.$axios).then(
+          ApiExec<string>(this.$axios,new AdminLogoutInput()).then(
               value => {
-                if (value.data.errno === 0) {
-                  this.$message({type: 'success', message: '退出成功'})
-                  this.$router.push(LoginRouter)
-                }
+                this.$message({type: 'success', message: '退出成功'})
+                this.$router.push(LoginRouter)
+              }
+          ).catch(
+              reason => {
+                this.$message.error('退出失败')
               }
           )
         }
