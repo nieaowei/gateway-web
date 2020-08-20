@@ -110,7 +110,19 @@ export class GetServiceDetailInput implements Api {
 }
 
 
-export class AddGrpcServiceInput {
+export class AddGrpcServiceInput implements Api{
+    Method(): MethodType {
+        return MethodType.POST;
+    }
+
+    Params(): any {
+        return this
+    }
+
+    URL(): string {
+        return '/api/service/grpc/add';
+    }
+
 
     load_type?: number;
 
@@ -236,6 +248,18 @@ export class AddHttpServiceInput implements Api {
 
 
 export class AddTcpServiceInput {
+
+    Method(): MethodType {
+        return MethodType.POST;
+    }
+
+    Params(): any {
+        return this
+    }
+
+    URL(): string {
+        return '/api/service/tcp/add';
+    }
 
     load_type?: number;
 

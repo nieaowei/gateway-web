@@ -1,5 +1,5 @@
 <template>
-  <StepsPane v-bind:steps="stepsItems" v-on:steps-change="stepsChange" v-on:complete="complete">
+  <StepsPane v-loading="loading" v-bind:steps="stepsItems" v-on:steps-change="stepsChange" v-on:complete="complete">
     <template v-slot:content="step">
       <el-form @submit.native.prevent class="content" v-if="step.active===0" label-width="120px" v-model="formData"
                label-position="left"
@@ -65,11 +65,18 @@
                label-position="left"
                label-suffix="："
                v-model="formData">
+        <el-form-item label="开启授权" style="text-align: left;">
+          <el-switch class="add-pane-switch" v-model="formData.open_auth" :active-value="1"
+                     :inactive-value="0"></el-switch>
+        </el-form-item>
         <el-form-item label="IP白名单">
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.white_list" v-focus></el-input>
         </el-form-item>
         <el-form-item label="IP黑名单">
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.black_list"></el-input>
+        </el-form-item>
+        <el-form-item label="主机白名单">
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.white_host_name"></el-input>
         </el-form-item>
         <el-form-item label="客户端限流">
           <el-input v-model.number="formData.clientip_flow_limit"></el-input>
@@ -77,24 +84,28 @@
         <el-form-item label="服务端限流">
           <el-input v-model.number="formData.service_flow_limit"></el-input>
         </el-form-item>
-        <el-form-item label="主机白名单">
-          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.white_host_name"></el-input>
-        </el-form-item>
-        <el-form-item label="开启授权" style="text-align: left;">
-          <el-switch class="add-pane-switch" v-model="formData.open_auth" :active-value="1"
-                     :inactive-value="0"></el-switch>
-        </el-form-item>
       </el-form>
-      <el-form @submit.native.prevent class="content" v-if="step.active===3" label-width="120px" v-model="formData"
+      <el-form @submit.native.prevent class="content" v-if="step.active===3" label-width="140px" v-model="formData"
                label-position="left"
                label-suffix="："
                key="10">
-        <el-form-item label="服务名称" prop="service_name">
-          <el-input v-focus v-model="formData.service_name"></el-input>
+        <el-form-item label="IP列表" prop="ip_list">
+          <el-input v-focus v-model="formData.ip_list" type="textarea" :autosize="DefaultTextArea"></el-input>
         </el-form-item>
-        <el-form-item label="服务描述" prop="service_desc">
-          <el-input type="textarea" :autosize="DefaultTextArea"
-                    v-model="formData.service_desc"></el-input>
+        <el-form-item label="权重列表" prop="weight_list">
+          <el-input v-model="formData.weight_list" type="textarea" :autosize="DefaultTextArea"></el-input>
+        </el-form-item>
+        <el-form-item label="建立连接超时" prop="upstream_connect_timeout">
+          <el-input v-model.number="formData.upstream_connect_timeout"></el-input>
+        </el-form-item>
+        <el-form-item label="链接空闲超时" prop="upstream_idle_timeout">
+          <el-input v-model.number="formData.upstream_idle_timeout"></el-input>
+        </el-form-item>
+        <el-form-item label="获取header超时" prop="upstream_header_timeout">
+          <el-input v-model.number="formData.upstream_header_timeout"></el-input>
+        </el-form-item>
+        <el-form-item label="最大空闲链接数" prop="upstream_max_idle">
+          <el-input v-model.number="formData.upstream_max_idle"></el-input>
         </el-form-item>
       </el-form>
     </template>
@@ -174,6 +185,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      loading: false,
       ServiceOpPaneType: ServiceOpPaneType,
       DefaultTextArea: DefaultTextArea,
       formData: this.tempData.type === ServiceOpPaneType.HTTP ? new AddHttpServiceInput() : (this.tempData.type === ServiceOpPaneType.TCP ? new AddTcpServiceInput() : new AddGrpcServiceInput()),
@@ -219,7 +231,7 @@ export default Vue.extend({
     if (this.tempData !== null && this.tempData != undefined) {
       if (this.tempData.op === ServiceOpPaneOp.EDIT) {
         //去网络操作获取数据
-        ApiExec<never>(this.$axios, new GetServiceDetailInput(this.tempData.id)).then(
+        ApiExec<any>(this.$axios, new GetServiceDetailInput(this.tempData.id)).then(
             value => {
               if (this.tempData.type === ServiceOpPaneType.HTTP) {
                 this.formData = value as AddHttpServiceInput
@@ -237,73 +249,91 @@ export default Vue.extend({
     }
   },
   methods: {
-    stepsChange(val: number) {
+    stepsChange: function(val: number): void {
       this.active = val
     },
-    submit() {
+    submit: function (): void {
       // console.log(this.tempData)
       // this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
       // this.stepsItems[2].status = 'error'
+      this.loading = true
       if (this.tempData.op === ServiceOpPaneOp.ADD) {
         if (this.tempData.type === ServiceOpPaneType.HTTP) {
-          console.log('http add')
           const exec = this.formData as AddHttpServiceInput
           ApiExec<string>(this.$axios, exec).then(
               value => {
-                // yes todo
-                this.$message.success('增加成功')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
+                // this.$message.success('增加成功')
               }
           ).catch(
               reason => {
-                console.log(reason)
-                this.$message.error('增加失败')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
+                // this.$message.error('增加失败')
               }
-          )
+          ).finally(() => {
+            this.loading = false
+          })
           return;
         }
         if (this.tempData.type === ServiceOpPaneType.TCP) {
-          const exec = this.formData as AddHttpServiceInput
+          const exec = this.formData as AddTcpServiceInput
           ApiExec<string>(this.$axios, exec).then(
               value => {
                 // yes todo
-                this.$message.success('增加成功')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
+                // this.$message.success('增加成功')
               }
           ).catch(
               reason => {
-                this.$message.error('增加失败')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
+                // this.$message.error('增加失败')
               }
-          )
+          ).finally(() => {
+            this.loading = false
+          })
           return;
         }
         if (this.tempData.type === ServiceOpPaneType.GRPC) {
-          const exec = this.formData as AddHttpServiceInput
+          const exec = this.formData as AddGrpcServiceInput
           ApiExec<string>(this.$axios, exec).then(
               value => {
                 // yes todo
-                this.$message.success('增加成功')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
+                // this.$message.success('增加成功')
               }
           ).catch(
               reason => {
-                this.$message.error('增加失败')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
+
+                // this.$message.error('增加失败')
               }
-          )
+          ).finally(() => {
+            this.loading = false
+          })
           return;
         }
         return
       }
+      // edit
       if (this.tempData.op === ServiceOpPaneOp.EDIT) {
         if (this.tempData.type === ServiceOpPaneType.HTTP) {
-          const exec = this.formData as AddHttpServiceInput
+          const exec = this.formData as AddGrpcServiceInput
           ApiExec<string>(this.$axios, exec).then(
               value => {
                 // yes todo
-                this.$message.success('增加成功')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
+
+                // this.$message.success('增加成功')
               }
           ).catch(
               reason => {
-                this.$message.error('增加失败')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
+
+                // this.$message.error('增加失败')
               }
-          )
+          ).finally(() => {
+            this.loading = false
+          })
           return;
         }
         if (this.tempData.type === ServiceOpPaneType.TCP) {
@@ -311,13 +341,19 @@ export default Vue.extend({
           ApiExec<string>(this.$axios, exec).then(
               value => {
                 // yes todo
-                this.$message.success('增加成功')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
+
+                // this.$message.success('增加成功')
               }
           ).catch(
               reason => {
-                this.$message.error('增加失败')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
+
+                // this.$message.error('增加失败')
               }
-          )
+          ).finally(() => {
+            this.loading = false
+          })
           return;
         }
         if (this.tempData.type === ServiceOpPaneType.GRPC) {
@@ -325,13 +361,19 @@ export default Vue.extend({
           ApiExec<string>(this.$axios, exec).then(
               value => {
                 // yes todo
-                this.$message.success('增加成功')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
+
+                // this.$message.success('增加成功')
               }
           ).catch(
               reason => {
-                this.$message.error('增加失败')
+                this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
+
+                // this.$message.error('增加失败')
               }
-          )
+          ).finally(() => {
+            this.loading = false
+          })
           return;
         }
         return;

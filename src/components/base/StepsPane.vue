@@ -39,7 +39,7 @@
     <div class="step-footer">
 
       <transition :name="animateC" mode="out-in">
-        <div class="footer-button" @click="last" v-if="active>0 && active<steps.length && !isError" key="1">
+        <div class="footer-button" @click="last" v-if="active>0 && (active<steps.length || isError)" key="1">
           <slot name="last" v-bind:active="active"/>
         </div>
       </transition>
@@ -108,10 +108,10 @@ export default Vue.extend({
     steps: {
       handler: function (val, newVal) {
         const v = val as StepItem[]
-        console.log(val)
         v.some(value => {
           if (value.status === 'error') {
             this.isError = true
+            value.status = 'wait'
           }
         })
       },
@@ -128,6 +128,12 @@ export default Vue.extend({
     },
     last() {
       if (this.active >= 0) {
+        // this.steps.some(value => {
+        //   if (value.status === 'error') {
+        //     this.isError = true
+        //   }
+        // })
+        this.isError = false
         this.animateC = this.animateLast
         this.active--
         this.$emit('steps-change', this.active)
