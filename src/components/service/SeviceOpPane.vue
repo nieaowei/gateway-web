@@ -55,10 +55,10 @@
                label-position="left"
                label-suffix="：" key="11">
         <el-form-item label="端口号" prop="rule_type">
-          <el-input v-focus v-model.number="formData.grpc_port"></el-input>
+          <el-input v-focus v-model.number="formData.port"></el-input>
         </el-form-item>
         <el-form-item label="URL重写" prop="rule_type">
-          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.grpc_header_transfor"></el-input>
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.header_transform"></el-input>
         </el-form-item>
       </el-form>
       <el-form class="content" @submit.native.prevent v-if="step.active===2" key="12" label-width="98px"
@@ -145,7 +145,10 @@ import ApiExec, {
   AddGrpcServiceInput,
   AddHttpServiceInput,
   AddTcpServiceInput,
-  GetServiceDetailInput
+  GetServiceDetailInput,
+  UpdateGprcServiceInput,
+  UpdateHttpServiceInput,
+  UpdateTcpServiceInput
 } from '@/repositories/repo'
 
 export enum ServiceOpPaneType {
@@ -188,7 +191,7 @@ export default Vue.extend({
       loading: false,
       ServiceOpPaneType: ServiceOpPaneType,
       DefaultTextArea: DefaultTextArea,
-      formData: this.tempData.type === ServiceOpPaneType.HTTP ? new AddHttpServiceInput() : (this.tempData.type === ServiceOpPaneType.TCP ? new AddTcpServiceInput() : new AddGrpcServiceInput()),
+      formData: this.tempData.op===ServiceOpPaneOp.EDIT?(this.tempData.type===ServiceOpPaneType.HTTP?new UpdateHttpServiceInput():(this.tempData.type===ServiceOpPaneType.TCP?new UpdateTcpServiceInput():new UpdateGprcServiceInput())):(this.tempData.type===ServiceOpPaneType.HTTP?new AddHttpServiceInput():(this.tempData.type===ServiceOpPaneType.TCP?new AddTcpServiceInput():new AddGrpcServiceInput())),//new UpdateHttpServiceInput(),//this.tempData.op === ServiceOpPaneOp.ADD ? (this.tempData.type === ServiceOpPaneType.HTTP ? new AddHttpServiceInput() : (this.tempData.type === ServiceOpPaneType.TCP ? new AddTcpServiceInput() : new AddGrpcServiceInput())) : (this.tempData.type === ServiceOpPaneType.HTTP ? new UpdateHttpServiceInput() : (this.tempData.type === ServiceOpPaneType.TCP ? new UpdateTcpServiceInput() : new UpdateGprcServiceInput())),
       active: 0,
       stepsItems: [
         new StepItem((this.tempData.op === ServiceOpPaneOp.EDIT ? '编辑' : '填写') + '服务信息'),
@@ -226,21 +229,24 @@ export default Vue.extend({
       }
     }
   },
-  created() {
-    // 如果是edit操作
+  mounted() {
     if (this.tempData !== null && this.tempData != undefined) {
       if (this.tempData.op === ServiceOpPaneOp.EDIT) {
         //去网络操作获取数据
+        // eslint-disable-next-line @typescript-eslint/camelcase
         ApiExec<any>(this.$axios, new GetServiceDetailInput(this.tempData.id)).then(
             value => {
-              if (this.tempData.type === ServiceOpPaneType.HTTP) {
-                this.formData = value as AddHttpServiceInput
+              if (this.formData instanceof UpdateHttpServiceInput){
+                this.formData = new UpdateHttpServiceInput(value)
+                return
               }
-              if (this.tempData.type === ServiceOpPaneType.GRPC) {
-                this.formData = value as AddGrpcServiceInput
+              if (this.formData instanceof UpdateTcpServiceInput){
+                this.formData = new UpdateTcpServiceInput(value)
+                return
               }
-              if (this.tempData.type === ServiceOpPaneType.TCP) {
-                this.formData = value as AddTcpServiceInput
+              if (this.formData instanceof UpdateGprcServiceInput){
+                this.formData = new UpdateGprcServiceInput(value)
+                return
               }
             }
         )
@@ -248,14 +254,15 @@ export default Vue.extend({
       }
     }
   },
+  created() {
+    //如果是edit操作
+
+  },
   methods: {
-    stepsChange: function(val: number): void {
+    stepsChange: function (val: number): void {
       this.active = val
     },
     submit: function (): void {
-      // console.log(this.tempData)
-      // this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'error')
-      // this.stepsItems[2].status = 'error'
       this.loading = true
       if (this.tempData.op === ServiceOpPaneOp.ADD) {
         if (this.tempData.type === ServiceOpPaneType.HTTP) {
@@ -317,13 +324,9 @@ export default Vue.extend({
       // edit
       if (this.tempData.op === ServiceOpPaneOp.EDIT) {
         if (this.tempData.type === ServiceOpPaneType.HTTP) {
-          const exec = this.formData as AddGrpcServiceInput
-          ApiExec<string>(this.$axios, exec).then(
+          ApiExec<string>(this.$axios, this.formData).then(
               value => {
-                // yes todo
                 this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
-
-                // this.$message.success('增加成功')
               }
           ).catch(
               reason => {
@@ -337,8 +340,7 @@ export default Vue.extend({
           return;
         }
         if (this.tempData.type === ServiceOpPaneType.TCP) {
-          const exec = this.formData as AddHttpServiceInput
-          ApiExec<string>(this.$axios, exec).then(
+          ApiExec<string>(this.$axios, this.formData).then(
               value => {
                 // yes todo
                 this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
@@ -357,8 +359,7 @@ export default Vue.extend({
           return;
         }
         if (this.tempData.type === ServiceOpPaneType.GRPC) {
-          const exec = this.formData as AddHttpServiceInput
-          ApiExec<string>(this.$axios, exec).then(
+          ApiExec<string>(this.$axios, this.formData).then(
               value => {
                 // yes todo
                 this.$set(this.stepsItems[this.stepsItems.length - 1], 'status', 'success')
