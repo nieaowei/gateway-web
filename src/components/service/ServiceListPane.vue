@@ -10,6 +10,14 @@
       <el-table-column prop="qps" label="日请求量" min-width="80px"></el-table-column>
       <el-table-column prop="total_node" label="节点数量" min-width="80px"></el-table-column>
       <el-table-column label="操作" fixed="right" min-width="150px" align="center">
+        <template slot="header">
+          <el-button
+              @click="getServiceList"
+              size="mini"
+              icon="el-icon-refresh-right">
+            刷新
+          </el-button>
+        </template>
         <template slot-scope="scope">
           <el-button size="mini" type="primary">统计</el-button>
           <el-button size="mini" type="primary" @click="editService(scope.row)">修改</el-button>

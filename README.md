@@ -5,4 +5,4 @@
 - [x] Complete the loading of avatar.
 - [ ] Complete the dashboard user interface.
 - [x] Refactor repositories by using design mode.
-- [ ] Add one refresh button on ServiceList page.
+- [x] Add one refresh button on ServiceList page.
