@@ -7,6 +7,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios, {AxiosStatic} from 'axios'
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon.vue'
+import echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts
 
 Vue.component('v-icon', Icon)
 

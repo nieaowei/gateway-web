@@ -95,6 +95,14 @@
         <el-form-item label="权重列表" prop="weight_list">
           <el-input v-model="formData.weight_list" type="textarea" :autosize="DefaultTextArea"></el-input>
         </el-form-item>
+        <el-form-item label="负载均衡方式" prop="round_type" align="left">
+          <el-radio-group v-model.number="formData.round_type">
+            <el-radio :label="0">随机</el-radio>
+            <el-radio :label="1">轮询</el-radio>
+            <el-radio :label="2">权重轮询</el-radio>
+            <el-radio :label="3">哈希一致性</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="建立连接超时" prop="upstream_connect_timeout">
           <el-input v-model.number="formData.upstream_connect_timeout"></el-input>
         </el-form-item>
@@ -161,7 +169,6 @@ export enum ServiceOpPaneOp {
   ADD = 'add',
   EDIT = 'edit'
 }
-
 
 export class ServiceOpPaneData {
   id?: number
@@ -233,6 +240,7 @@ export default Vue.extend({
     if (this.tempData !== null && this.tempData != undefined) {
       if (this.tempData.op === ServiceOpPaneOp.EDIT) {
         //去网络操作获取数据
+        this.loading = true
         // eslint-disable-next-line @typescript-eslint/camelcase
         ApiExec<any>(this.$axios, new GetServiceDetailInput(this.tempData.id)).then(
             value => {
@@ -248,6 +256,10 @@ export default Vue.extend({
                 this.formData = new UpdateGprcServiceInput(value)
                 return
               }
+            }
+        ).finally(
+            () => {
+              this.loading = false
             }
         )
 
