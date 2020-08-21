@@ -28,6 +28,7 @@ interface Api {
 }
 
 export default function ApiExec<out>(axios: AxiosStatic, api: Api): Promise<out> {
+    console.log(api.Method(), api.URL())
     return new Promise<out>((resolve, reject) => {
         if (api.Method() === MethodType.POST) {
             axios.post<Response<out>>(api.URL(), api.Params()).then(
@@ -110,7 +111,7 @@ export class GetServiceDetailInput implements Api {
 }
 
 
-export class AddGrpcServiceInput implements Api{
+export class AddGrpcServiceInput implements Api {
     Method(): MethodType {
         return MethodType.POST;
     }
@@ -164,9 +165,9 @@ export class AddGrpcServiceInput implements Api{
 
     upstream_max_idle?: number;
 
-    grpc_port?: number;
+    port?: number;
 
-    grpc_header_transfor?: string;
+    header_transform?: string;
 
     constructor() {
     }
@@ -205,7 +206,7 @@ export class AddHttpServiceInput implements Api {
 
     url_rewrite?: string;
 
-    header_transfor?: string;
+    header_transform?: string;
 
     open_auth?: number;
 
@@ -218,12 +219,6 @@ export class AddHttpServiceInput implements Api {
     clientip_flow_limit?: number;
 
     service_flow_limit?: number;
-
-    check_method?: number;
-
-    check_timeout?: number;
-
-    check_interval?: number;
 
     round_type?: number;
 
@@ -278,12 +273,6 @@ export class AddTcpServiceInput {
     clientip_flow_limit?: number;
 
     service_flow_limit?: number;
-
-    check_method?: number;
-
-    check_timeout?: number;
-
-    check_interval?: number;
 
     round_type?: number;
 
@@ -463,39 +452,42 @@ export class Response<T> {
 }
 
 
-export interface UpdateGprcServiceInput {
+export class UpdateGprcServiceInput implements Api {
+    Method(): MethodType {
+        return MethodType.POST;
+    }
 
-    load_type?: number;
+    Params(): any {
+        return this
+    }
 
-    service_name: string;
-
-    service_desc: string;
-
-    open_auth?: number;
+    URL(): string {
+        return '/api/service/grpc/update';
+    }
 
     black_list?: string;
 
-    white_list?: string;
-
-    white_host_name?: string;
-
     clientip_flow_limit?: number;
 
-    service_flow_limit?: number;
+    forbid_list?: string;
 
-    check_method?: number;
-
-    check_timeout?: number;
-
-    check_interval?: number;
-
-    round_type?: number;
+    header_transform?: string;
 
     ip_list?: string;
 
-    weight_list?: string;
+    open_auth?: number;
 
-    forbid_list?: string;
+    port?: number;
+
+    round_type?: number;
+
+    service_desc?: string;
+
+    service_flow_limit?: number;
+
+    service_id?: number;
+
+    service_name?: string;
 
     upstream_connect_timeout?: number;
 
@@ -505,25 +497,64 @@ export interface UpdateGprcServiceInput {
 
     upstream_max_idle?: number;
 
-    port: number;
+    weight_list?: string;
 
-    service_id: number;
+    white_host_name?: string;
 
-    header_transfor?: string;
+    white_list?: string;
+
+    constructor(props?: any) {
+        if (props !== undefined) {
+            this.service_id = props.service_id
+            this.service_desc = props.service_desc
+            this.service_name = props.service_name
+            this.white_list = props.white_list
+            this.white_host_name = props.white_host_name
+            this.weight_list = props.weight_list
+            this.upstream_max_idle = props.upstream_max_idle
+            this.upstream_idle_timeout = props.upstream_idle_timeout
+
+            this.upstream_header_timeout = props.upstream_header_timeout
+            this.upstream_connect_timeout = props.upstream_connect_timeout
+            this.service_flow_limit = props.service_flow_limit
+            this.round_type = props.round_type
+            this.open_auth = props.open_auth
+            this.port = props.port
+            this.header_transform = props.header_transform
+            this.ip_list = props.ip_list
+
+            this.forbid_list = props.forbid_list
+            this.clientip_flow_limit = props.clientip_flow_limit
+            this.black_list = props.black_list
+        }
+
+
+    }
 }
 
 
-export interface UpdateHttpServiceInput {
+export class UpdateHttpServiceInput implements Api {
+    Method(): MethodType {
+        return MethodType.POST;
+    }
 
-    load_type?: number;
+    Params(): any {
+        return this
+    }
 
-    service_name: string;
+    URL(): string {
+        return "/api/service/http/update";
+    }
 
-    service_desc: string;
+    black_list?: string;
 
-    rule_type?: number;
+    clientip_flow_limit?: number;
 
-    rule?: string;
+    forbid_list?: string;
+
+    header_transform?: string;
+
+    ip_list?: string;
 
     need_https?: number;
 
@@ -531,35 +562,21 @@ export interface UpdateHttpServiceInput {
 
     need_websocket?: number;
 
-    url_rewrite?: string;
-
-    header_transfor?: string;
-
     open_auth?: number;
-
-    black_list?: string;
-
-    white_list?: string;
-
-    white_host_name?: string;
-
-    clientip_flow_limit?: number;
-
-    service_flow_limit?: number;
-
-    check_method?: number;
-
-    check_timeout?: number;
-
-    check_interval?: number;
 
     round_type?: number;
 
-    ip_list?: string;
+    rule?: string;
 
-    weight_list?: string;
+    rule_type?: number;
 
-    forbid_list?: string;
+    service_desc?: string;
+
+    service_flow_limit?: number;
+
+    service_id?: number;
+
+    service_name?: string;
 
     upstream_connect_timeout?: number;
 
@@ -569,43 +586,85 @@ export interface UpdateHttpServiceInput {
 
     upstream_max_idle?: number;
 
-    service_id: string;
+    url_rewrite?: string;
+
+    weight_list?: string;
+
+    white_host_name?: string;
+
+    white_list?: string;
+
+    constructor(props?: any) {
+        if (props !== undefined) {
+            this.service_id = props.service_id
+            this.service_desc = props.service_desc
+            this.service_name = props.service_name
+            this.white_list = props.white_list
+            this.white_host_name = props.white_host_name
+            this.weight_list = props.weight_list
+            this.url_rewrite = props.url_rewrite
+            this.upstream_max_idle = props.upstream_max_idle
+            this.upstream_idle_timeout = props.upstream_idle_timeout
+
+            this.upstream_header_timeout = props.upstream_header_timeout
+            this.upstream_connect_timeout = props.upstream_connect_timeout
+            this.service_flow_limit = props.service_flow_limit
+            this.rule_type = props.rule_type
+            this.rule = props.rule
+            this.round_type = props.round_type
+            this.open_auth = props.open_auth
+
+            this.need_websocket = props.need_websocket
+            this.need_strip_uri = props.need_strip_uri
+            this.need_https = props.need_https
+            this.ip_list = props.ip_list
+
+            this.header_transform = props.header_transform
+            this.forbid_list = props.forbid_list
+            this.clientip_flow_limit = props.clientip_flow_limit
+            this.black_list = props.black_list
+        }
+
+
+    }
+
 }
 
 
-export interface UpdateTcpServiceInput {
+export class UpdateTcpServiceInput implements Api {
+    Method(): MethodType {
+        return MethodType.POST;
+    }
 
-    load_type?: number;
+    Params(): any {
+        return this
+    }
 
-    service_name: string;
-
-    service_desc: string;
-
-    open_auth?: number;
+    URL(): string {
+        return '/api/service/tcp/update';
+    }
 
     black_list?: string;
 
-    white_list?: string;
-
-    white_host_name?: string;
-
     clientip_flow_limit?: number;
 
-    service_flow_limit?: number;
-
-    check_method?: number;
-
-    check_timeout?: number;
-
-    check_interval?: number;
-
-    round_type?: number;
+    forbid_list?: string;
 
     ip_list?: string;
 
-    weight_list?: string;
+    open_auth?: number;
 
-    forbid_list?: string;
+    port?: number;
+
+    round_type?: number;
+
+    service_desc?: string;
+
+    service_flow_limit?: number;
+
+    service_id?: number;
+
+    service_name?: string;
 
     upstream_connect_timeout?: number;
 
@@ -615,9 +674,38 @@ export interface UpdateTcpServiceInput {
 
     upstream_max_idle?: number;
 
-    port: number;
+    weight_list?: string;
 
-    service_id: number;
+    white_host_name?: string;
+
+    white_list?: string;
+
+    constructor(props?: any) {
+        if (props !== undefined) {
+            this.service_id = props.service_id
+            this.service_desc = props.service_desc
+            this.service_name = props.service_name
+            this.white_list = props.white_list
+            this.white_host_name = props.white_host_name
+            this.weight_list = props.weight_list
+            this.upstream_max_idle = props.upstream_max_idle
+            this.upstream_idle_timeout = props.upstream_idle_timeout
+
+            this.upstream_header_timeout = props.upstream_header_timeout
+            this.upstream_connect_timeout = props.upstream_connect_timeout
+            this.service_flow_limit = props.service_flow_limit
+            this.round_type = props.round_type
+            this.open_auth = props.open_auth
+            this.port = props.port
+            this.ip_list = props.ip_list
+
+            this.forbid_list = props.forbid_list
+            this.clientip_flow_limit = props.clientip_flow_limit
+            this.black_list = props.black_list
+        }
+
+
+    }
 }
 
 // eslint:disable
