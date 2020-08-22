@@ -13,7 +13,7 @@
           </el-link>
         </div>
         <el-menu :collapse="HomeSideBar.nav.show" class="home-sidebar-nav" :default-active="HomeSideBar.defaultRouter"
-                 background-color="#124485"
+                 background-color="#1762ab"
                  text-color="#ffffff" router>
           <el-menu-item :index="HomeSideBar.menuRoutes.dashboard.name" :route="HomeSideBar.menuRoutes.dashboard">
             <v-icon name="chart-bar"/>
@@ -222,7 +222,7 @@ export default Vue.extend({
   border gray 1px solid
 
 .home-sidebar
-  background-color #124485
+  background-color #1762ab
   min-width 64px
   height 100%
 

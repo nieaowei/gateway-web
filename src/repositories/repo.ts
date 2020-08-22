@@ -709,3 +709,25 @@ export class UpdateTcpServiceInput implements Api {
 }
 
 // eslint:disable
+
+
+export class GetServiceStatisticalInput implements Api{
+    Method(): MethodType {
+        return MethodType.GET;
+    }
+
+    Params(): any {
+        return ''
+    }
+
+    URL(): string {
+        return "/api/service/statistical";
+    }
+
+}
+
+export class GetServiceStatisticalOutput {
+    HTTP = 0
+    TCP = 0
+    GRPC = 0
+}

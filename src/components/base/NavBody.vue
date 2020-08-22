@@ -44,6 +44,7 @@ export default Vue.extend({
   padding-top 1em
   padding-left 1em
   padding-right 1em
+  //height 100%
 
 //.body-content-page
 //  margin-top 1em

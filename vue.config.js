@@ -10,7 +10,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://code.nekilc.com:8880/',
+        target: 'http://127.0.0.1:8880/',
         pathRewrite: {
           '^/api': ''
         },

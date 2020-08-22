@@ -3,17 +3,18 @@
     <template v-slot:header>
     </template>
     <template v-slot:content>
-      <el-row style="width: 100%;height: 50%;">
-        <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6"
+      <el-row style="height: auto;">
+        <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" style="height: auto;"
                 v-for="(card,key) in cards" :key="key">
-          <icon-total-card :icon="card.icon" :label="card.label" :color="card.color"></icon-total-card>
+          <icon-total-card :icon="card.icon" :label="card.label" :color="card.color" :content="card.content"></icon-total-card>
         </el-col>
       </el-row>
-      <el-row>
-        <el-col>
-          <div id="line"></div>
+      <el-row style="height: auto;">
+        <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16" style="height: auto;">
+          <day-line-chart :today="[1,2,3]" :yesterday="[3,2,1]"></day-line-chart>
         </el-col>
-        <el-col>
+        <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" style="height: auto;">
+          <total-pie-chart v-on:total="total"></total-pie-chart>
         </el-col>
       </el-row>
     </template>
@@ -24,9 +25,14 @@
 import Vue from 'vue'
 import NavBody from '@/components/base/NavBody.vue'
 import IconTotalCard, {IconTotalCardData} from '@/components/base/IconTotalCard.vue'
+import DayLineChart from '@/components/base/DayLineChart.vue'
+import TotalPieChart from '@/components/dashboard/TotalPieChart.vue'
+
+require('echarts/theme/macarons')
+
 export default Vue.extend({
   name: 'Dashboard',
-  components: {NavBody, IconTotalCard},
+  components: {NavBody, IconTotalCard, DayLineChart, TotalPieChart},
   data: function () {
     return {
       cards: [
@@ -34,33 +40,34 @@ export default Vue.extend({
           label: '服务数',
           content: 0,
           icon: 'list-ol',
-          color: '#2c9442'
+          color: '#5ec9ca'
         },
         {
           label: '当日请求量',
           content: 0,
           icon: 'eye',
-          color: '#c35160'
+          color: '#b8a5de'
         },
         {
           label: '当日QPS',
           content: 0,
           icon: 'search',
-          color: '#3b4899'
+          color: '#5fb4ee'
 
         },
         {
           label: '租户数',
           content: 0,
           icon: 'user-friends',
-          color: '#996f3b'
-
+          color: '#c19562'
         }
       ] as IconTotalCardData[]
     }
   },
-  mounted() {
-    // this.$echarts.init(document.getElementById('line'))
+  methods: {
+    total(t: number) {
+      this.$set(this.cards[0], 'content', t)
+    }
   }
 })
 </script>
@@ -69,7 +76,4 @@ export default Vue.extend({
 .el-card
   margin 15px
 
-//color #F22947
-
-//min-width 20%
 </style>
