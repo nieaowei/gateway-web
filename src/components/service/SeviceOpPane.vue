@@ -37,7 +37,7 @@
           <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.url_rewrite"></el-input>
         </el-form-item>
         <el-form-item label="Header转换" prop="rule_type">
-          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.header_transfor"></el-input>
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.header_transform"></el-input>
         </el-form-item>
       </el-form>
       <el-form @submit.native.prevent class="content" v-if="step.active===1 && (type===ServiceOpPaneType.TCP)"
@@ -57,8 +57,8 @@
         <el-form-item label="端口号" prop="rule_type">
           <el-input v-focus v-model.number="formData.port"></el-input>
         </el-form-item>
-        <el-form-item label="URL重写" prop="rule_type">
-          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.header_transform"></el-input>
+        <el-form-item label="Metadata转换" prop="rule_type">
+          <el-input type="textarea" :autosize="DefaultTextArea" v-model="formData.metadata_transform"></el-input>
         </el-form-item>
       </el-form>
       <el-form class="content" @submit.native.prevent v-if="step.active===2" key="12" label-width="98px"

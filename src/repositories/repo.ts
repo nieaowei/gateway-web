@@ -167,7 +167,7 @@ export class AddGrpcServiceInput implements Api {
 
     port?: number;
 
-    header_transform?: string;
+    metadata_transform?: string;
 
     constructor() {
     }
@@ -471,7 +471,7 @@ export class UpdateGprcServiceInput implements Api {
 
     forbid_list?: string;
 
-    header_transform?: string;
+    metadata_transform?: string;
 
     ip_list?: string;
 
@@ -520,7 +520,7 @@ export class UpdateGprcServiceInput implements Api {
             this.round_type = props.round_type
             this.open_auth = props.open_auth
             this.port = props.port
-            this.header_transform = props.header_transform
+            this.metadata_transform = props.metadata_transform
             this.ip_list = props.ip_list
 
             this.forbid_list = props.forbid_list
