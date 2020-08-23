@@ -711,7 +711,7 @@ export class UpdateTcpServiceInput implements Api {
 // eslint:disable
 
 
-export class GetServiceStatisticalInput implements Api{
+export class GetServiceStatisticalInput implements Api {
     Method(): MethodType {
         return MethodType.GET;
     }
@@ -730,4 +730,32 @@ export class GetServiceStatisticalOutput {
     HTTP = 0
     TCP = 0
     GRPC = 0
+}
+
+export class GetServiceStatInput implements Api {
+    Method(): MethodType {
+        return MethodType.GET;
+    }
+
+    Params(): any {
+        return '?service_id=' + this.service_id
+    }
+
+    URL(): string {
+        return "/api/service/stat";
+    }
+
+    service_id?: number
+
+    constructor(id?: number) {
+        if (id !== undefined) {
+            this.service_id = id
+        }
+    }
+
+}
+
+export class GetServiceStatOutput {
+    today_list!: number[]
+    yesterday_list!: number[]
 }

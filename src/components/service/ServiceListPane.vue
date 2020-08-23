@@ -19,7 +19,7 @@
           </el-button>
         </template>
         <template slot-scope="scope">
-          <el-button size="mini" type="primary">统计</el-button>
+          <el-button size="mini" type="primary" @click="statisticService(scope.row)">统计</el-button>
           <el-button size="mini" type="primary" @click="editService(scope.row)">修改</el-button>
           <el-popconfirm title="确定删除 ？" @onConfirm="deleteService(scope.row)" style="margin-left: 10px;">
             <el-button size="mini" slot="reference" type="danger">删除</el-button>
@@ -138,6 +138,9 @@ export default Vue.extend({
     },
     editService(row: ServiceListItem) {
       this.$emit("edit-service", row)
+    },
+    statisticService(item: ServiceListItem){
+      this.$emit('statistic-service',item)
     }
     // sizeChange (size: number) {
     //   this.getServiceList(new GetServiceListInput(1, size))

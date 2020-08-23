@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <div id="pie" style="width: 100%;height: 25em;"></div>
+    <div id="pie" style="width: 100%;height: 30em;"></div>
   </el-card>
 </template>
 

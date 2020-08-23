@@ -6,12 +6,13 @@
       <el-row style="height: auto;">
         <el-col :xs="12" :sm="12" :md="12" :lg="6" :xl="6" style="height: auto;"
                 v-for="(card,key) in cards" :key="key">
-          <icon-total-card :icon="card.icon" :label="card.label" :color="card.color" :content="card.content"></icon-total-card>
+          <icon-total-card :icon="card.icon" :label="card.label" :color="card.color"
+                           :content="card.content"></icon-total-card>
         </el-col>
       </el-row>
       <el-row style="height: auto;">
         <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16" style="height: auto;">
-          <day-line-chart :today="[1,2,3]" :yesterday="[3,2,1]"></day-line-chart>
+          <day-line-chart :today="today" :yesterday="yesterday"></day-line-chart>
         </el-col>
         <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" style="height: auto;">
           <total-pie-chart v-on:total="total"></total-pie-chart>
@@ -27,6 +28,7 @@ import NavBody from '@/components/base/NavBody.vue'
 import IconTotalCard, {IconTotalCardData} from '@/components/base/IconTotalCard.vue'
 import DayLineChart from '@/components/base/DayLineChart.vue'
 import TotalPieChart from '@/components/dashboard/TotalPieChart.vue'
+import ApiExec, {GetServiceStatInput, GetServiceStatOutput} from "@/repositories/repo";
 
 require('echarts/theme/macarons')
 
@@ -35,6 +37,8 @@ export default Vue.extend({
   components: {NavBody, IconTotalCard, DayLineChart, TotalPieChart},
   data: function () {
     return {
+      today: [] as number[],
+      yesterday: [] as number[],
       cards: [
         {
           label: '服务数',
@@ -63,6 +67,14 @@ export default Vue.extend({
         }
       ] as IconTotalCardData[]
     }
+  },
+  mounted() {
+    ApiExec<GetServiceStatOutput>(this.$axios,new GetServiceStatInput()).then(
+        value => {
+          this.today = value.today_list
+          this.yesterday = value.yesterday_list
+        }
+    )
   },
   methods: {
     total(t: number) {

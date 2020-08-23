@@ -8,7 +8,7 @@
                  :name="item.name"
     >
       <component v-bind:is="item.component" :temp-data="item.data"
-                 v-on:complete="complete(item)" v-on:edit-service="editService"></component>
+                 v-on:complete="complete(item)" v-on:statistic-service="statisticService" v-on:edit-service="editService"></component>
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -39,7 +39,7 @@ export default Vue.extend({
     },
     removeTab: {
       type: Function,
-      default: function (): any {
+      default: function (): void {
         console.log()
       }
     }
@@ -50,6 +50,9 @@ export default Vue.extend({
     },
     editService(item: ServiceListItem){
       this.$emit('edit-service',item)
+    },
+    statisticService(item: ServiceListItem){
+      this.$emit('statistic-service',item)
     }
   }
 })

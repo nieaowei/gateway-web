@@ -22,7 +22,7 @@
     </template>
     <template v-slot:content>
       <BodyTab v-on:edit-service="editService" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
-               v-on:complete="complete"></BodyTab>
+               v-on:complete="complete" v-on:statistic-service="addStatistic"></BodyTab>
     </template>
   </NavBody>
 </template>
@@ -39,6 +39,7 @@ import ServiceOpPane, {
 import {BodyTabItem, EditTabItem} from '@/mixins/model'
 import ServiceListPane, {ServiceListPaneData} from '@/components/service/ServiceListPane.vue'
 import {ServiceListItem} from "@/repositories/repo";
+import StatisticPane, {StatisticPaneData} from "@/components/service/StatisticPane.vue";
 
 export default Vue.extend({
   name: 'Service',
@@ -115,6 +116,11 @@ export default Vue.extend({
     addTcp() {
       const newItem = new EditTabItem('', '新建TCP服务', ServiceOpPane)
       newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.TCP, op: ServiceOpPaneOp.ADD})
+      this.addTab(newItem)
+    },
+    addStatistic(item: ServiceListItem) {
+      const newItem = new EditTabItem('', item.service_name + '服务统计', StatisticPane)
+      newItem.data = new StatisticPaneData({id: item.id})
       this.addTab(newItem)
     },
     complete(item: EditTabItem) {

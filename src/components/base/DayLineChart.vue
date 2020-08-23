@@ -1,12 +1,12 @@
 <template>
   <el-card>
-    <div id="line" style="width: 100%;height: 25em;"></div>
+    <div id="line" style="width: 100%;height: 30em;"></div>
   </el-card>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import echarts from "echarts"
+import echarts, {ECharts} from "echarts"
 
 
 export default Vue.extend({
@@ -14,21 +14,44 @@ export default Vue.extend({
   props: {
     today: {
       type: Array,
-      default: () => [0] as number[]
+      default: () => [] as number[]
     },
     yesterday: {
       type: Array,
-      default: () => [0] as number[]
+      default: () => [] as number[]
     }
   },
-  // data(){
-  //   return{
-  //     today:[],
-  //     yesterday:[]
-  //   }
-  // },
+  data() {
+    return {
+      myChart1: {} as ECharts
+    }
+  },
+  watch: {
+    today: {
+      deep: true,
+      handler: function (val: number[]) {
+        this.myChart1.setOption({
+          series: [
+            {data: this.yesterday as number[]},
+            {data: val as number[]}
+          ]
+        })
+      }
+    },
+    yesterday: {
+      deep: true,
+      handler: function (val: number[]) {
+        this.myChart1.setOption({
+          series: [
+            {data: val as number[]},
+            {data: this.today as number[]}
+          ]
+        })
+      }
+    }
+  },
   mounted() {
-    const myChart1 = echarts.init(document.getElementById('line') as HTMLDivElement, 'macarons');
+    this.myChart1 = echarts.init(document.getElementById('line') as HTMLDivElement, 'macarons');
     // const myChart1 = echarts.init(document.getElementById('line') as HTMLDivElement, 'macarons');
     const option1 = {
       title: {
@@ -93,9 +116,11 @@ export default Vue.extend({
         }]
     };
     // 使用刚指定的配置项和数据显示图表。
-    myChart1.setOption(option1);
+    this.myChart1.setOption(option1);
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const that = this
     window.addEventListener('resize', function () {
-      myChart1.resize()
+      that.myChart1.resize()
     })
 
     // this.$axios.get('/api/service/stat?service_id=9').then(
