@@ -7,3 +7,4 @@
 - [x] Refactor repositories by using design mode.
 - [x] Add one refresh button on ServiceList page.
 - [x] Complete single service statistic.
+- [x] Fix delete failure.
