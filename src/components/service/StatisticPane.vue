@@ -1,5 +1,5 @@
 <template>
-  <day-line-chart :today="today" :yesterday="yesterday"></day-line-chart>
+  <day-line-chart :today="today" :yesterday="yesterday" :id="this.tempData.id"></day-line-chart>
 </template>
 
 <script lang="ts">

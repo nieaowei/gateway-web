@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <div id="line" style="width: 100%;height: 30em;"></div>
+    <div :id="'line'+this.id.toString()" style="width: 100%;height: 30em;"></div>
   </el-card>
 </template>
 
@@ -12,6 +12,9 @@ import echarts, {ECharts} from "echarts"
 export default Vue.extend({
   name: "DayLineChart",
   props: {
+    id: {
+      type: Number
+    },
     today: {
       type: Array,
       default: () => [] as number[]
@@ -51,7 +54,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.myChart1 = echarts.init(document.getElementById('line') as HTMLDivElement, 'macarons');
+    this.myChart1 = echarts.init(document.getElementById('line' + this.id.toString()) as HTMLDivElement, 'macarons');
     // const myChart1 = echarts.init(document.getElementById('line') as HTMLDivElement, 'macarons');
     const option1 = {
       title: {
