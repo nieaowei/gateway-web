@@ -398,7 +398,7 @@ export class DeleteServiceInput implements Api {
     }
 
     URL(): string {
-        return "";
+        return "/api/service/del";
     }
 
 
