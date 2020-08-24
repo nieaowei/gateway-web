@@ -12,7 +12,7 @@
       </el-row>
       <el-row style="height: auto;">
         <el-col :xs="24" :sm="24" :md="24" :lg="16" :xl="16" style="height: auto;">
-          <day-line-chart :today="today" :yesterday="yesterday"></day-line-chart>
+          <day-line-chart :today="today" :id="0" :yesterday="yesterday"></day-line-chart>
         </el-col>
         <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" style="height: auto;">
           <total-pie-chart v-on:total="total"></total-pie-chart>
