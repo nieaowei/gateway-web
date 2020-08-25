@@ -15,7 +15,7 @@
           <day-line-chart :today="today" :id="0" :yesterday="yesterday"></day-line-chart>
         </el-col>
         <el-col :xs="24" :sm="24" :md="24" :lg="8" :xl="8" style="height: auto;">
-          <total-pie-chart v-on:total="total"></total-pie-chart>
+          <total-pie-chart></total-pie-chart>
         </el-col>
       </el-row>
     </template>
@@ -28,7 +28,7 @@ import NavBody from '@/components/base/NavBody.vue'
 import IconTotalCard, {IconTotalCardData} from '@/components/base/IconTotalCard.vue'
 import DayLineChart from '@/components/base/DayLineChart.vue'
 import TotalPieChart from '@/components/dashboard/TotalPieChart.vue'
-import ApiExec, {GetServiceStatInput, GetServiceStatOutput} from "@/repositories/repo";
+import ApiExec, {GetServiceStatInput, GetServiceStatOutput, GetTotalInput, GetTotalOutput} from "@/repositories/repo";
 
 require('echarts/theme/macarons')
 
@@ -69,18 +69,21 @@ export default Vue.extend({
     }
   },
   mounted() {
-    ApiExec<GetServiceStatOutput>(this.$axios,new GetServiceStatInput()).then(
+    ApiExec<GetServiceStatOutput>(this.$axios, new GetServiceStatInput()).then(
         value => {
           this.today = value.today_list
           this.yesterday = value.yesterday_list
         }
     )
+    ApiExec<GetTotalOutput>(this.$axios, new GetTotalInput()).then(
+        value => {
+          this.$set(this.cards[0], 'content', value.service_amount)
+          this.$set(this.cards[1], 'content', value.qpd)
+          this.$set(this.cards[2], 'content', value.qps)
+          this.$set(this.cards[3], 'content', value.tenant_amount)
+        }
+    )
   },
-  methods: {
-    total(t: number) {
-      this.$set(this.cards[0], 'content', t)
-    }
-  }
 })
 </script>
 

@@ -710,8 +710,7 @@ export class UpdateTcpServiceInput implements Api {
 
 // eslint:disable
 
-
-export class GetServiceStatisticalInput implements Api {
+export class GetTotalInput implements Api {
     Method(): MethodType {
         return MethodType.GET;
     }
@@ -721,12 +720,35 @@ export class GetServiceStatisticalInput implements Api {
     }
 
     URL(): string {
-        return "/api/service/statistical";
+        return "/api/statistics/total";
     }
 
 }
 
-export class GetServiceStatisticalOutput {
+export class GetTotalOutput {
+    service_amount = 0
+    qps = 0
+    qpd = 0
+    tenant_amount = 0
+}
+
+
+export class GetServiceAmountInput implements Api {
+    Method(): MethodType {
+        return MethodType.GET;
+    }
+
+    Params(): any {
+        return ''
+    }
+
+    URL(): string {
+        return "/api/statistics/service/amount";
+    }
+
+}
+
+export class GetServiceAmountOutput {
     HTTP = 0
     TCP = 0
     GRPC = 0

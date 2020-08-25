@@ -7,7 +7,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import echarts from "echarts";
-import ApiExec, {GetServiceStatisticalInput, GetServiceStatisticalOutput} from "@/repositories/repo";
+import ApiExec, {GetServiceAmountInput, GetServiceAmountOutput} from "@/repositories/repo";
 
 class PieData {
   name = '标签'
@@ -61,12 +61,11 @@ export default Vue.extend({
       myChart.resize()
     })
 
-    ApiExec<GetServiceStatisticalOutput>(this.$axios, new GetServiceStatisticalInput()).then(
+    ApiExec<GetServiceAmountOutput>(this.$axios, new GetServiceAmountInput()).then(
         value => {
           this.pieData.push(new PieData('TCP', value.TCP))
           this.pieData.push(new PieData('HTTP', value.HTTP))
           this.pieData.push(new PieData('GRPC', value.GRPC))
-          this.$emit('total', value.TCP + value.GRPC + value.HTTP)
           myChart.setOption({
             series: [{
               data: this.pieData
