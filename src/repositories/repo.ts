@@ -781,3 +781,42 @@ export class GetServiceStatOutput {
     today_list!: number[]
     yesterday_list!: number[]
 }
+
+class AppListItem {
+    app_id = ''
+    name = ''
+    secret = ''
+    qpd = 0
+    qps = 0
+}
+
+export class GetAppListOutput {
+    total = 0
+    list?:AppListItem
+}
+
+export class GetAppListInput implements Api{
+    info ?= ''
+    page_no = 0
+    page_size = 0
+
+    Method(): MethodType {
+        return MethodType.GET;
+    }
+
+    Params(): any {
+        return '?page_no=' + this.page_no + '&page_size=' + this.page_size + '&info=' + this.info
+    }
+
+    URL(): string {
+        return "/api/app/list";
+    }
+
+
+    constructor(pn: number, ps: number, i?: string) {
+        this.info = i
+        this.page_no = pn
+        this.page_size = ps
+    }
+
+}

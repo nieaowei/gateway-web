@@ -1,8 +1,6 @@
 <template>
-  <el-row>
-    <el-col id="sidebar" :xs="HomeSideBar.size.xs" :sm="HomeSideBar.size.sm" :md="HomeSideBar.size.md"
-            :lg="HomeSideBar.size.lg" :xl="HomeSideBar.size.xl">
-      <div class="home-sidebar">
+  <el-container style="height: 100%;">
+    <el-aside width="auto" class="home-sidebar">
         <div class="home-sidebar-logo">
           <el-link :underline="false" href="/home">
             <el-avatar shape="square"
@@ -29,11 +27,9 @@
             <span slot="title">租户管理</span>
           </el-menu-item>
         </el-menu>
-      </div>
-    </el-col>
-    <el-col :xs="Main.size.xs" :sm="Main.size.sm" :md="Main.size.md" :lg="Main.size.lg" :xl="Main.size.xl">
-      <div id="home">
-        <div class="home-header" id="home-header">
+    </el-aside>
+    <el-container>
+      <el-header style="padding: 0;" class="home-header">
           <div class="home-header-left">
             <div class="header-icon">
               <el-button class="header-icon-bt" v-on:click="toggleSideBar">
@@ -85,13 +81,80 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-        </div>
+      </el-header>
+      <el-main style="padding: 0;">
         <transition name="slide-fade" mode="out-in">
           <router-view></router-view>
         </transition>
-      </div>
-    </el-col>
-  </el-row>
+      </el-main>
+    </el-container>
+  </el-container>
+<!--  <el-row>-->
+<!--    <el-col id="sidebar" :xs="HomeSideBar.size.xs" :sm="HomeSideBar.size.sm" :md="HomeSideBar.size.md"-->
+<!--            :lg="HomeSideBar.size.lg" :xl="HomeSideBar.size.xl">-->
+<!--      -->
+<!--    </el-col>-->
+<!--    <el-col :xs="Main.size.xs" :sm="Main.size.sm" :md="Main.size.md" :lg="Main.size.lg" :xl="Main.size.xl">-->
+<!--      <div id="home">-->
+<!--        <div class="home-header" id="home-header">-->
+<!--          <div class="home-header-left">-->
+<!--            <div class="header-icon">-->
+<!--              <el-button class="header-icon-bt" v-on:click="toggleSideBar">-->
+<!--                <v-icon :name="HomeSideBar.nav.icon"/>-->
+<!--              </el-button>-->
+<!--            </div>-->
+<!--            <el-breadcrumb separator-class="el-icon-caret-right">-->
+<!--              <el-breadcrumb-item>首页</el-breadcrumb-item>-->
+<!--              <el-breadcrumb-item>活动管理</el-breadcrumb-item>-->
+<!--            </el-breadcrumb>-->
+<!--          </div>-->
+<!--          <div class="home-header-right">-->
+<!--            <el-dropdown @command="handleCommand">-->
+<!--              <el-button class="avatar-button" circle>-->
+<!--                <el-avatar class="header-avatar" size="medium"-->
+<!--                           :src="this.$store.state.public.adminInfo.avatar"></el-avatar>-->
+<!--              </el-button>-->
+<!--              <el-dropdown-menu slot="dropdown">-->
+<!--                <el-dropdown-item command="profile">-->
+<!--                  <v-icon name="id-card"/>-->
+<!--                  个人信息-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item command="changepd">-->
+<!--                  <v-icon name="edit"></v-icon>-->
+<!--                  修改密码-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item command="exit">-->
+<!--                  <v-icon name="sign-out-alt"></v-icon>-->
+<!--                  退出-->
+<!--                </el-dropdown-item>-->
+<!--              </el-dropdown-menu>-->
+<!--            </el-dropdown>-->
+<!--            <el-dropdown @command="handleCommand">-->
+<!--              <el-button class="avatar-button" icon="el-icon-caret-bottom" circle>-->
+<!--              </el-button>-->
+<!--              <el-dropdown-menu slot="dropdown">-->
+<!--                <el-dropdown-item command="profile">-->
+<!--                  <v-icon name="id-card"/>-->
+<!--                  个人信息-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item command="changepd">-->
+<!--                  <v-icon name="edit"></v-icon>-->
+<!--                  修改密码-->
+<!--                </el-dropdown-item>-->
+<!--                <el-dropdown-item command="exit">-->
+<!--                  <v-icon name="sign-out-alt"></v-icon>-->
+<!--                  退出-->
+<!--                </el-dropdown-item>-->
+<!--              </el-dropdown-menu>-->
+<!--            </el-dropdown>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <transition name="slide-fade" mode="out-in">-->
+<!--          <router-view></router-view>-->
+<!--        </transition>-->
+<!--      </div>-->
+<!--    </el-col>-->
+<!--  </el-row>-->
 </template>
 
 <script lang="ts">
@@ -188,7 +251,6 @@ export default Vue.extend({
 .home-header
   width 100%
   border-bottom #98ceff 1px solid
-  //box-shadow 0 20px 20px -20px black
   display flex
   flex-direction row
   align-items center
@@ -223,8 +285,6 @@ export default Vue.extend({
 
 .home-sidebar
   background-color #1762ab
-  min-width 64px
-  height 100%
 
 .home-sidebar-logo
   display flex

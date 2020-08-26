@@ -10,3 +10,4 @@
 - [x] Fix delete failure.
 - [ ] Complete the interfaces related to tenant management.- 2020.8.24
 - [x] Refactor the GetServiceStatistical and service amount.
+- [ ] Refactor the homepage adaptive method.
