@@ -9,16 +9,16 @@
       <el-table-column label="操作" fixed="right" min-width="150px" align="center">
         <template slot="header">
           <el-button
-              @click="getServiceList"
+              @click="getTenantList"
               size="mini"
               icon="el-icon-refresh-right">
             刷新
           </el-button>
         </template>
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="statisticService(scope.row)">统计</el-button>
-          <el-button size="mini" type="primary" @click="editService(scope.row)">修改</el-button>
-          <el-popconfirm title="确定删除 ？" @onConfirm="deleteService(scope.row)" style="margin-left: 10px;">
+          <el-button size="mini" type="primary" @click="statisticTenant(scope.row)">统计</el-button>
+          <el-button size="mini" type="primary" @click="editTenant(scope.row)">修改</el-button>
+          <el-popconfirm title="确定删除 ？" @onConfirm="deleteTenant(scope.row)" style="margin-left: 10px;">
             <el-button size="mini" slot="reference" type="danger">删除</el-button>
           </el-popconfirm>
         </template>
@@ -32,8 +32,8 @@
         class="body-content-page"
         background
         layout="total,sizes,prev, pager, next"
-        @size-change="getServiceList"
-        @current-change="getServiceList"
+        @size-change="getTenantList"
+        @current-change="getTenantList"
     >
     </el-pagination>
   </div>
@@ -42,10 +42,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import ApiExec, {
-  DeleteServiceInput, GetAppListInput, GetAppListOutput,
-  GetServiceListInput,
-  GetServiceListOutput,
-  ServiceListItem
+  GetAppListInput, GetAppListOutput,
+  AppListItem
 } from "@/repositories/repo";
 import {ServiceListPaneData} from "@/components/service/ServiceListPane.vue";
 
@@ -77,13 +75,13 @@ export default Vue.extend({
         console.log(oldVal)
         if (oldVal !== val) {
           this.query.info = val
-          this.getServiceList()
+          this.getTenantList()
         }
       }
     }
   },
   created() {
-    this.getServiceList()
+    this.getTenantList()
   },
   mounted() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -93,7 +91,7 @@ export default Vue.extend({
     }, 500)
   },
   methods: {
-    getServiceList() {
+    getTenantList() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const that = this
       this.loading = true
@@ -114,29 +112,33 @@ export default Vue.extend({
           }
       )
     },
-    // deleteService(service: ServiceListItem) {
-    //   ApiExec<string>(this.$axios,new DeleteServiceInput(service.id)).then(
-    //       value => {
-    //         this.$message.success('删除成功')
-    //         const index = this.serviceData.list.indexOf(service)
-    //         this.serviceData.list.splice(index, 1)
-    //       }
-    //   ).catch(
-    //       reason => {
-    //         this.$message.error(reason)
-    //       }
-    //   )
-    // },
-    // editService(row: ServiceListItem) {
-    //   this.$emit("edit-service", row)
-    // },
-    // statisticService(item: ServiceListItem){
-    //   this.$emit('statistic-service',item)
-    // }
+    deleteTenant(service: AppListItem) {
+      // ApiExec<string>(this.$axios,new
+      // (service.id)).then(
+      //     value => {
+      //       this.$message.success('删除成功')
+      //       const index = this.serviceData.list.indexOf(service)
+      //       this.serviceData.list.splice(index, 1)
+      //     }
+      // ).catch(
+      //     reason => {
+      //       this.$message.error(reason)
+      //     }
+      // )
+    },
+    editTenant(row: AppListItem) {
+      this.$emit("edit-tenant", row)
+    },
+    statisticTenant(item: AppListItem){
+      this.$emit('statistic-tenant',item)
+    }
   }
 })
 </script>
 
 <style scoped lang="stylus">
+
+.body-content-page
+  margin-top 1em
 
 </style>

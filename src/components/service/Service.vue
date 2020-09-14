@@ -21,8 +21,8 @@
       </el-button>
     </template>
     <template v-slot:content>
-      <BodyTab v-on:edit-service="editService" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
-               v-on:complete="complete" v-on:statistic-service="addStatistic"></BodyTab>
+      <ServiceBody v-on:edit-service="editService" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
+                   v-on:complete="complete" v-on:statistic-service="addStatistic"></ServiceBody>
     </template>
   </NavBody>
 </template>
@@ -30,7 +30,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import NavBody from '@/components/base/NavBody.vue'
-import BodyTab from '@/components/base/BodyTab.vue'
 import ServiceOpPane, {
   ServiceOpPaneData,
   ServiceOpPaneOp,
@@ -39,11 +38,12 @@ import ServiceOpPane, {
 import {BodyTabItem, EditTabItem} from '@/mixins/model'
 import ServiceListPane, {ServiceListPaneData} from '@/components/service/ServiceListPane.vue'
 import {ServiceListItem} from "@/repositories/repo";
-import StatisticPane, {StatisticPaneData} from "@/components/service/StatisticPane.vue";
+import StatisticPane, {StatisticPaneData} from "@/components/service/StatisticPane.vue"
+import ServiceBody from "@/components/service/ServiceBody.vue"
 
 export default Vue.extend({
   name: 'Service',
-  components: {NavBody, BodyTab},
+  components: {NavBody, ServiceBody},
   data() {
     return {
       Header: {

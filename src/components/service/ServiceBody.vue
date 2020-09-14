@@ -16,37 +16,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {EditTabItem, BodyTabItem} from '@/mixins/model'
-import {ServiceListItem} from "@/repositories/repo";
 import body from '@/mixins/body'
+import {EditTabItem} from "@/mixins/model";
+import {ServiceListItem} from "@/repositories/repo";
 
 export default Vue.extend({
-  name: 'BodyTab',
-  // mixins: {body},
-  props: {
-    bodyTabItem: {
-      type: Object,
-      default: () => new BodyTabItem([])
-    },
-    clickTab: {
-      type: Function,
-      default: function () {
-        console.log()
-      }
-    },
-    addTab: {
-      type: Function,
-      default: function () {
-        console.log()
-      }
-    },
-    removeTab: {
-      type: Function,
-      default: function (): void {
-        console.log()
-      }
-    }
-  },
+  name: "ServiceBody",
+  mixins: [body],
   methods: {
     complete(item: EditTabItem) {
       this.$emit('complete', item)
@@ -61,14 +37,6 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped lang="stylus">
-//.slide-fade-enter-active
-//  transition: all 2s ease
+<style scoped>
 
-//.slide-fade-leave-active
-//  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
-
-//.slide-fade-enter
-//  transform: translateX(200px);
-//  opacity: 0;
 </style>

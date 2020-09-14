@@ -2,19 +2,19 @@
   <NavBody>
     <template v-slot:header>
       <el-input class="body-header-input" size="small" v-model="Header.input"
-                v-on:keyup.enter.native="SearchService(Header.input)"></el-input>
-      <el-button type="primary" size="small" v-on:click="SearchService(Header.input)">
+                v-on:keyup.enter.native="SearchTenant(Header.input)"></el-input>
+      <el-button type="primary" size="small" v-on:click="SearchTenant(Header.input)">
         <v-icon name="search"/>
         搜索
       </el-button>
-      <el-button type="primary" size="small" v-on:click="addHttp">
+      <el-button type="primary" size="small" v-on:click="addTenant">
         <v-icon name="plus-circle"/>
         添加租户
       </el-button>
     </template>
     <template v-slot:content>
-      <BodyTab v-on:edit-service="editService" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
-               v-on:complete="complete" v-on:statistic-service="addStatistic"></BodyTab>
+      <TenantBody v-on:edit-service="editTenant" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
+                  v-on:complete="complete" v-on:statistic-service="addStatistic"></TenantBody>
     </template>
   </NavBody>
 </template>
@@ -22,7 +22,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import NavBody from '@/components/base/NavBody.vue'
-import BodyTab from "@/components/base/BodyTab.vue";
+import TenantBody from "@/components/tenant/TenantBody.vue";
 import {BodyTabItem, EditTabItem} from "@/mixins/model";
 import ServiceListPane, {ServiceListPaneData} from "@/components/service/ServiceListPane.vue";
 import ServiceOpPane, {
@@ -36,7 +36,7 @@ import TenantListPane from "@/components/tenant/TenantListPane.vue";
 
 export default Vue.extend({
   name: 'Tenant',
-  components: {NavBody, BodyTab},
+  components: {NavBody, TenantBody},
   data() {
     return {
       Header: {
@@ -55,7 +55,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    SearchService(val: string): void {
+    SearchTenant(val: string): void {
       this.Content.editableTabs.editTabs[0].data.input = val
     },
     removeTab(name: string) {
@@ -96,19 +96,9 @@ export default Vue.extend({
       tabs.nameNum++
       tabs.currentTabIndex = newItem.name
     },
-    addHttp() {
-      const newItem = new EditTabItem('', '新建HTTP服务', ServiceOpPane)
+    addTenant() {
+      const newItem = new EditTabItem('', '添加租户', ServiceOpPane)
       newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.HTTP, op: ServiceOpPaneOp.ADD})
-      this.addTab(newItem)
-    },
-    addGrpc() {
-      const newItem = new EditTabItem('', '新建GRPC服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.GRPC, op: ServiceOpPaneOp.ADD})
-      this.addTab(newItem)
-    },
-    addTcp() {
-      const newItem = new EditTabItem('', '新建TCP服务', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.TCP, op: ServiceOpPaneOp.ADD})
       this.addTab(newItem)
     },
     addStatistic(item: ServiceListItem) {
@@ -119,7 +109,7 @@ export default Vue.extend({
     complete(item: EditTabItem) {
       this.removeTab(item.name)
     },
-    editService(item: ServiceListItem) {
+    editTenant(item: ServiceListItem) {
       const newItem = new EditTabItem('', '修改' + item.service_name + '服务', ServiceOpPane)
       const str = item.load_type?.toLowerCase() as ServiceOpPaneType
       newItem.data = new ServiceOpPaneData({op: ServiceOpPaneOp.EDIT, id: item.id, type: str})

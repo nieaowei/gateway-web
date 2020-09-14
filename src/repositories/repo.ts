@@ -782,7 +782,7 @@ export class GetServiceStatOutput {
     yesterday_list!: number[]
 }
 
-class AppListItem {
+export class AppListItem {
     app_id = ''
     name = ''
     secret = ''
