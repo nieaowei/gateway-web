@@ -24,15 +24,11 @@ import Vue from 'vue'
 import NavBody from '@/components/base/NavBody.vue'
 import TenantBody from "@/components/tenant/TenantBody.vue";
 import {BodyTabItem, EditTabItem} from "@/mixins/model";
-import ServiceListPane, {ServiceListPaneData} from "@/components/service/ServiceListPane.vue";
-import ServiceOpPane, {
-  ServiceOpPaneData,
-  ServiceOpPaneOp,
-  ServiceOpPaneType
-} from "@/components/service/SeviceOpPane.vue";
-import {ServiceListItem} from "@/repositories/repo";
+
 import StatisticPane, {StatisticPaneData} from "@/components/service/StatisticPane.vue";
-import TenantListPane from "@/components/tenant/TenantListPane.vue";
+import TenantListPane, {TenantListPaneData} from "@/components/tenant/TenantListPane.vue";
+import TenantOpPane, {TenantOpPaneData, TenantOpPaneOp} from "@/components/tenant/TenantOpPane.vue";
+import {AppListItem} from "@/repositories/repo";
 
 export default Vue.extend({
   name: 'Tenant',
@@ -48,7 +44,7 @@ export default Vue.extend({
             name: '1',
             title: '租户列表',
             component: TenantListPane,
-            data: new ServiceListPaneData()
+            data: new TenantListPaneData()
           }
         ] as EditTabItem[])
       }
@@ -97,22 +93,21 @@ export default Vue.extend({
       tabs.currentTabIndex = newItem.name
     },
     addTenant() {
-      const newItem = new EditTabItem('', '添加租户', ServiceOpPane)
-      newItem.data = new ServiceOpPaneData({type: ServiceOpPaneType.HTTP, op: ServiceOpPaneOp.ADD})
+      const newItem = new EditTabItem('', '添加租户', TenantOpPane)
+      newItem.data = new TenantOpPaneData({op: TenantOpPaneOp.ADD})
       this.addTab(newItem)
     },
-    addStatistic(item: ServiceListItem) {
-      const newItem = new EditTabItem('', item.service_name + '服务统计', StatisticPane)
+    addStatistic(item: AppListItem) {
+      const newItem = new EditTabItem('', item.name + '租户统计', StatisticPane)
       newItem.data = new StatisticPaneData({id: item.id})
       this.addTab(newItem)
     },
     complete(item: EditTabItem) {
       this.removeTab(item.name)
     },
-    editTenant(item: ServiceListItem) {
-      const newItem = new EditTabItem('', '修改' + item.service_name + '服务', ServiceOpPane)
-      const str = item.load_type?.toLowerCase() as ServiceOpPaneType
-      newItem.data = new ServiceOpPaneData({op: ServiceOpPaneOp.EDIT, id: item.id, type: str})
+    editTenant(item: AppListItem) {
+      const newItem = new EditTabItem('', '修改' + item.name + '租户', TenantOpPane)
+      newItem.data = new TenantOpPaneData({op: TenantOpPaneOp.EDIT, id: item.id})
       this.addTab(newItem)
     }
   }

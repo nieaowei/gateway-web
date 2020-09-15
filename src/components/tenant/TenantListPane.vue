@@ -1,7 +1,8 @@
 <template>
   <div>
-    <el-table border v-loading="loading" :data="serviceData.list" :max-height="tableHeight" highlight-current-row>
-      <el-table-column prop="app_id" label="AppId" fixed="left" min-width="70px"></el-table-column>
+    <el-table border v-loading="loading" :data="appData.list" :max-height="tableHeight" highlight-current-row>
+      <el-table-column prop="id" label="Id" fixed="left" min-width="70px"></el-table-column>
+      <el-table-column prop="app_id" label="AppId" fixed="left" min-width="100px"></el-table-column>
       <el-table-column prop="name" label="租户名称" min-width="80px"></el-table-column>
       <el-table-column prop="secret" label="秘钥" min-width="280px"></el-table-column>
       <el-table-column prop="qpd" label="日请求量" min-width="150px"></el-table-column>
@@ -25,8 +26,8 @@
       </el-table-column>
     </el-table>
     <el-pagination
-        v-show="serviceData.total>0"
-        :total="serviceData.total"
+        v-show="appData.total>0"
+        :total="appData.total"
         :page-size.sync="query.page_size"
         :current-page.sync="query.page_no"
         class="body-content-page"
@@ -45,19 +46,25 @@ import ApiExec, {
   GetAppListInput, GetAppListOutput,
   AppListItem
 } from "@/repositories/repo";
-import {ServiceListPaneData} from "@/components/service/ServiceListPane.vue";
+
+export class TenantListPaneData {
+  input = ''
+  constructor() {
+    this.input = ''
+  }
+}
 
 export default Vue.extend({
   name: "TenantListPane",
   props: {
     tempData: {
-      type: ServiceListPaneData,
-      default: () => new ServiceListPaneData()
+      type: TenantListPaneData,
+      default: () => new TenantListPaneData()
     }
   },
   data() {
     return {
-      serviceData: {} as GetAppListOutput,
+      appData: {} as GetAppListOutput,
       loading: false,
       query: new GetAppListInput(1, 10, ''),
       tableHeight: document.documentElement.clientHeight - 50 - 62 - 41 - 16 - 32 - 50 - 30
@@ -71,8 +78,6 @@ export default Vue.extend({
   watch: {
     input: {
       handler: function (val: string, oldVal: string) {
-        console.log(val)
-        console.log(oldVal)
         if (oldVal !== val) {
           this.query.info = val
           this.getTenantList()
@@ -97,7 +102,7 @@ export default Vue.extend({
       this.loading = true
       ApiExec<GetAppListOutput>(this.$axios, this.query).then(
           value => {
-            this.serviceData = value
+            this.appData = value
             this.$message({type: 'success', message: '获取成功'})
           }
       ).catch(

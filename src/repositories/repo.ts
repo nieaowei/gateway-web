@@ -13,6 +13,8 @@
 
 import globalAxios, {AxiosPromise, AxiosInstance, AxiosStatic} from 'axios'
 
+const URI_PREFIX = '/api'
+
 enum MethodType {
     GET,
     POST
@@ -31,7 +33,7 @@ export default function ApiExec<out>(axios: AxiosStatic, api: Api): Promise<out>
     console.log(api.Method(), api.URL())
     return new Promise<out>((resolve, reject) => {
         if (api.Method() === MethodType.POST) {
-            axios.post<Response<out>>(api.URL(), api.Params()).then(
+            axios.post<Response<out>>(URI_PREFIX+api.URL(), api.Params()).then(
                 value => {
                     if (value.data.errno === 0) {
                         resolve(value.data.data)
@@ -44,7 +46,7 @@ export default function ApiExec<out>(axios: AxiosStatic, api: Api): Promise<out>
                 reject(reason)
             })
         } else {
-            return axios.get<Response<out>>(api.URL() + api.Params()).then(
+            return axios.get<Response<out>>(URI_PREFIX+api.URL() + api.Params()).then(
                 value => {
                     if (value.data.errno === 0) {
                         resolve(value.data.data)
@@ -75,7 +77,7 @@ export class GetAvatarInput implements Api {
     }
 
     URL(): string {
-        return '/api/public/get/avatar';
+        return '/public/get/avatar';
     }
 
     constructor(u: string) {
@@ -98,7 +100,7 @@ export class GetServiceDetailInput implements Api {
     }
 
     URL(): string {
-        return '/api/service/detail';
+        return '/service/detail';
     }
 
 
@@ -121,7 +123,7 @@ export class AddGrpcServiceInput implements Api {
     }
 
     URL(): string {
-        return '/api/service/grpc/add';
+        return '/service/grpc/add';
     }
 
 
@@ -184,7 +186,7 @@ export class AddHttpServiceInput implements Api {
     }
 
     URL(): string {
-        return "/api/service/http/add";
+        return "/service/http/add";
     }
 
 
@@ -253,7 +255,7 @@ export class AddTcpServiceInput {
     }
 
     URL(): string {
-        return '/api/service/tcp/add';
+        return '/service/tcp/add';
     }
 
     load_type?: number;
@@ -327,7 +329,7 @@ export class AdminLoginInput implements Api {
     }
 
     URL(): string {
-        return "/api/admin/login";
+        return "/admin/login";
     }
 
     username: string = '';
@@ -348,7 +350,7 @@ export class AdminLogoutInput implements Api {
     }
 
     URL(): string {
-        return "/api/admin/logout";
+        return "/admin/logout";
     }
 }
 
@@ -374,7 +376,7 @@ export class GetServiceListInput implements Api {
     }
 
     URL(): string {
-        return "/api/service/list";
+        return "/service/list";
     }
 
     info?: string = ''
@@ -398,7 +400,7 @@ export class DeleteServiceInput implements Api {
     }
 
     URL(): string {
-        return "/api/service/del";
+        return "/service/del";
     }
 
 
@@ -462,7 +464,7 @@ export class UpdateGprcServiceInput implements Api {
     }
 
     URL(): string {
-        return '/api/service/grpc/update';
+        return '/service/grpc/update';
     }
 
     black_list?: string;
@@ -543,7 +545,7 @@ export class UpdateHttpServiceInput implements Api {
     }
 
     URL(): string {
-        return "/api/service/http/update";
+        return "/service/http/update";
     }
 
     black_list?: string;
@@ -641,7 +643,7 @@ export class UpdateTcpServiceInput implements Api {
     }
 
     URL(): string {
-        return '/api/service/tcp/update';
+        return '/service/tcp/update';
     }
 
     black_list?: string;
@@ -720,7 +722,7 @@ export class GetTotalInput implements Api {
     }
 
     URL(): string {
-        return "/api/statistics/total";
+        return "/statistics/total";
     }
 
 }
@@ -743,7 +745,7 @@ export class GetServiceAmountInput implements Api {
     }
 
     URL(): string {
-        return "/api/statistics/service/amount";
+        return "/statistics/service/amount";
     }
 
 }
@@ -764,7 +766,7 @@ export class GetServiceStatInput implements Api {
     }
 
     URL(): string {
-        return "/api/service/stat";
+        return "/service/stat";
     }
 
     service_id?: number
@@ -783,6 +785,7 @@ export class GetServiceStatOutput {
 }
 
 export class AppListItem {
+    id = 0
     app_id = ''
     name = ''
     secret = ''
@@ -792,11 +795,11 @@ export class AppListItem {
 
 export class GetAppListOutput {
     total = 0
-    list?:AppListItem
+    list?: AppListItem
 }
 
-export class GetAppListInput implements Api{
-    info ?= ''
+export class GetAppListInput implements Api {
+    info ? = ''
     page_no = 0
     page_size = 0
 
@@ -809,7 +812,7 @@ export class GetAppListInput implements Api{
     }
 
     URL(): string {
-        return "/api/app/list";
+        return "/app/list";
     }
 
 
@@ -819,4 +822,43 @@ export class GetAppListInput implements Api{
         this.page_size = ps
     }
 
+}
+
+export class GetAppDetailInput implements Api {
+    Method(): MethodType {
+        return MethodType.GET;
+    }
+
+    Params(): any {
+        return '?id=' + this.id
+    }
+
+    URL(): string {
+        return "/app/detail";
+    }
+
+    id?: number
+
+}
+
+export class AddAppInput implements Api {
+    Method(): MethodType {
+        return MethodType.POST;
+    }
+
+    Params(): any {
+        return this
+    }
+
+    URL(): string {
+        return "/app/add";
+    }
+
+    app_id?: string
+
+    name?: string
+
+    qps?: number
+
+    qpd?: number
 }
