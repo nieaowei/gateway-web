@@ -5,7 +5,7 @@
       <el-table-column prop="app_id" label="AppId" fixed="left" min-width="100px"></el-table-column>
       <el-table-column prop="name" label="租户名称" min-width="80px"></el-table-column>
       <el-table-column prop="secret" label="秘钥" min-width="280px"></el-table-column>
-      <el-table-column prop="qpd" label="日请求量" min-width="150px"></el-table-column>
+      <el-table-column prop="qpd" label="日请求量" min-width="80px"></el-table-column>
       <el-table-column prop="qps" label="QPS" min-width="80px"></el-table-column>
       <el-table-column label="操作" fixed="right" min-width="150px" align="center">
         <template slot="header">
@@ -44,7 +44,7 @@
 import Vue from 'vue'
 import ApiExec, {
   GetAppListInput, GetAppListOutput,
-  AppListItem
+  AppListItem, DeleteAppOutput, DeleteAppInput
 } from "@/repositories/repo";
 
 export class TenantListPaneData {
@@ -64,7 +64,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      appData: {} as GetAppListOutput,
+      appData: new GetAppListOutput(),
       loading: false,
       query: new GetAppListInput(1, 10, ''),
       tableHeight: document.documentElement.clientHeight - 50 - 62 - 41 - 16 - 32 - 50 - 30
@@ -117,19 +117,18 @@ export default Vue.extend({
           }
       )
     },
-    deleteTenant(service: AppListItem) {
-      // ApiExec<string>(this.$axios,new
-      // (service.id)).then(
-      //     value => {
-      //       this.$message.success('删除成功')
-      //       const index = this.serviceData.list.indexOf(service)
-      //       this.serviceData.list.splice(index, 1)
-      //     }
-      // ).catch(
-      //     reason => {
-      //       this.$message.error(reason)
-      //     }
-      // )
+    deleteTenant(appListItem: AppListItem) {
+      ApiExec<DeleteAppOutput>(this.$axios,new DeleteAppInput(appListItem.id)).then(
+          value => {
+            this.$message.success('删除成功')
+            const index = this.appData.list.indexOf(appListItem)
+            this.appData.list.splice(index, 1)
+          }
+      ).catch(
+          reason => {
+            this.$message.error(reason)
+          }
+      )
     },
     editTenant(row: AppListItem) {
       this.$emit("edit-tenant", row)

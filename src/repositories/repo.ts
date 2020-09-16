@@ -33,7 +33,7 @@ export default function ApiExec<out>(axios: AxiosStatic, api: Api): Promise<out>
     console.log(api.Method(), api.URL())
     return new Promise<out>((resolve, reject) => {
         if (api.Method() === MethodType.POST) {
-            axios.post<Response<out>>(URI_PREFIX+api.URL(), api.Params()).then(
+            axios.post<Response<out>>(URI_PREFIX + api.URL(), api.Params()).then(
                 value => {
                     if (value.data.errno === 0) {
                         resolve(value.data.data)
@@ -46,7 +46,7 @@ export default function ApiExec<out>(axios: AxiosStatic, api: Api): Promise<out>
                 reject(reason)
             })
         } else {
-            return axios.get<Response<out>>(URI_PREFIX+api.URL() + api.Params()).then(
+            return axios.get<Response<out>>(URI_PREFIX + api.URL() + api.Params()).then(
                 value => {
                     if (value.data.errno === 0) {
                         resolve(value.data.data)
@@ -795,7 +795,7 @@ export class AppListItem {
 
 export class GetAppListOutput {
     total = 0
-    list?: AppListItem
+    list!: AppListItem[]
 }
 
 export class GetAppListInput implements Api {
@@ -824,6 +824,16 @@ export class GetAppListInput implements Api {
 
 }
 
+export class GetAppDetailOutput {
+    app_id?: string
+
+    name?: string
+
+    qps?: number
+
+    qpd?: number
+}
+
 export class GetAppDetailInput implements Api {
     Method(): MethodType {
         return MethodType.GET;
@@ -838,6 +848,13 @@ export class GetAppDetailInput implements Api {
     }
 
     id?: number
+
+    constructor(id?: number) {
+        this.id = id
+    }
+}
+
+export class AddAppOutput {
 
 }
 
@@ -861,4 +878,69 @@ export class AddAppInput implements Api {
     qps?: number
 
     qpd?: number
+}
+
+export class DeleteAppInput implements Api {
+    Method(): MethodType {
+        return MethodType.GET;
+    }
+
+    Params(): any {
+        return '?id=' + this.id
+    }
+
+    URL(): string {
+        return "/app/del";
+    }
+
+    id!: number
+
+    constructor(id: number) {
+        this.id = id
+    }
+}
+
+export class DeleteAppOutput {
+
+}
+
+
+export class UpdateAppOutput {
+
+}
+
+export class UpdateAppInput implements Api {
+    Method(): MethodType {
+        return MethodType.POST;
+    }
+
+    Params(): any {
+        return this
+    }
+
+    URL(): string {
+        return "/app/update";
+    }
+
+    id ?: number
+
+    app_id?: string
+
+    name?: string
+
+    qps?: number
+
+    qpd?: number
+
+    constructor(props?: any) {
+        if (props != undefined) {
+            this.id = props.id
+            this.app_id = props.app_id
+            this.name = props.name
+            this.qps = props.qps
+            this.qpd = props.qpd
+
+        }
+    }
+
 }

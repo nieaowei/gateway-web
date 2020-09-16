@@ -13,7 +13,7 @@
       </el-button>
     </template>
     <template v-slot:content>
-      <TenantBody v-on:edit-service="editTenant" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
+      <TenantBody v-on:edit-tenant="editTenant" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
                   v-on:complete="complete" v-on:statistic-service="addStatistic"></TenantBody>
     </template>
   </NavBody>

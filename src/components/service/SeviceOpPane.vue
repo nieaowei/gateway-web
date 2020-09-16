@@ -241,6 +241,7 @@ export default Vue.extend({
       if (this.tempData.op === ServiceOpPaneOp.EDIT) {
         //去网络操作获取数据
         this.loading = true
+        const that = this
         // eslint-disable-next-line @typescript-eslint/camelcase
         ApiExec<any>(this.$axios, new GetServiceDetailInput(this.tempData.id)).then(
             value => {
@@ -259,7 +260,9 @@ export default Vue.extend({
             }
         ).finally(
             () => {
-              this.loading = false
+              setTimeout(function () {
+                that.loading = false
+              }, 500)
             }
         )
 
