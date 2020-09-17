@@ -7,7 +7,7 @@ import Vue from 'vue'
 import DayLineChart from '@/components/base/DayLineChart.vue'
 import ApiExec, {
   GetServiceStatInput,
-  GetServiceStatOutput
+  GetServiceStatOutput, GetTenantStatInput, GetTenantStatOutput
 } from "@/repositories/repo";
 
 export class StatisticPaneData {
@@ -24,7 +24,7 @@ export class StatisticPaneData {
 }
 
 export default Vue.extend({
-  name: "StatisticPane",
+  name: "TenantStatisticPane",
   components: {DayLineChart},
   props: {
     tempData: {
@@ -39,7 +39,7 @@ export default Vue.extend({
     }
   },
   created() {
-    ApiExec<GetServiceStatOutput>(this.$axios, new GetServiceStatInput(this.tempData.id)).then(
+    ApiExec<GetTenantStatOutput>(this.$axios, new GetTenantStatInput(this.tempData.id)).then(
         value => {
           this.today = value.today_list
           this.yesterday = value.yesterday_list

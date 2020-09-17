@@ -944,3 +944,32 @@ export class UpdateAppInput implements Api {
     }
 
 }
+
+
+export class GetTenantStatInput implements Api {
+    Method(): MethodType {
+        return MethodType.GET;
+    }
+
+    Params(): any {
+        return '?id=' + this.id
+    }
+
+    URL(): string {
+        return "/app/stat";
+    }
+
+    id?: number
+
+    constructor(id?: number) {
+        if (id !== undefined) {
+            this.id = id
+        }
+    }
+
+}
+
+export class GetTenantStatOutput {
+    today_list!: number[]
+    yesterday_list!: number[]
+}

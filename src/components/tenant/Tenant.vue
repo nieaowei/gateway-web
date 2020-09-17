@@ -14,7 +14,7 @@
     </template>
     <template v-slot:content>
       <TenantBody v-on:edit-tenant="editTenant" :body-tab-item="Content.editableTabs" :remove-tab="removeTab"
-                  v-on:complete="complete" v-on:statistic-service="addStatistic"></TenantBody>
+                  v-on:complete="complete" v-on:statistic-tenant="addStatistic"></TenantBody>
     </template>
   </NavBody>
 </template>
@@ -25,7 +25,7 @@ import NavBody from '@/components/base/NavBody.vue'
 import TenantBody from "@/components/tenant/TenantBody.vue";
 import {BodyTabItem, EditTabItem} from "@/mixins/model";
 
-import StatisticPane, {StatisticPaneData} from "@/components/service/StatisticPane.vue";
+import TenantStatisticPane, {StatisticPaneData} from "@/components/tenant/TenantStatisticPane.vue";
 import TenantListPane, {TenantListPaneData} from "@/components/tenant/TenantListPane.vue";
 import TenantOpPane, {TenantOpPaneData, TenantOpPaneOp} from "@/components/tenant/TenantOpPane.vue";
 import {AppListItem} from "@/repositories/repo";
@@ -98,7 +98,7 @@ export default Vue.extend({
       this.addTab(newItem)
     },
     addStatistic(item: AppListItem) {
-      const newItem = new EditTabItem('', item.name + '租户统计', StatisticPane)
+      const newItem = new EditTabItem('', item.name + '租户统计', TenantStatisticPane)
       newItem.data = new StatisticPaneData({id: item.id})
       this.addTab(newItem)
     },

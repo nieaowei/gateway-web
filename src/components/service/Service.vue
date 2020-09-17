@@ -38,7 +38,7 @@ import ServiceOpPane, {
 import {BodyTabItem, EditTabItem} from '@/mixins/model'
 import ServiceListPane, {ServiceListPaneData} from '@/components/service/ServiceListPane.vue'
 import {ServiceListItem} from "@/repositories/repo";
-import StatisticPane, {StatisticPaneData} from "@/components/service/StatisticPane.vue"
+import StatisticPane, {StatisticPaneData} from "@/components/service/ServiceStatisticPane.vue"
 import ServiceBody from "@/components/service/ServiceBody.vue"
 
 export default Vue.extend({

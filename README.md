@@ -8,6 +8,6 @@
 - [x] Add one refresh button on ServiceList page.
 - [x] Complete single service statistic.
 - [x] Fix delete failure.
-- [ ] Complete the interfaces related to tenant management.- 2020.8.24
+- [x] Complete the interfaces related to tenant management.- 2020.8.24
 - [x] Refactor the GetServiceStatistical and service amount.
 - [x] Refactor the homepage adaptive method.
