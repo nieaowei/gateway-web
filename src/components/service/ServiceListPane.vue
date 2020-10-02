@@ -6,8 +6,8 @@
       <el-table-column prop="service_desc" label="服务描述" min-width="280px"></el-table-column>
       <el-table-column prop="load_type" label="类型" min-width="80px"></el-table-column>
       <el-table-column prop="address" label="服务地址" min-width="150px"></el-table-column>
-      <el-table-column prop="qpd" label="QPS" min-width="80px"></el-table-column>
-      <el-table-column prop="qps" label="日请求量" min-width="80px"></el-table-column>
+      <el-table-column prop="qps" label="QPS" min-width="80px"></el-table-column>
+      <el-table-column prop="qpd" label="日请求量" min-width="80px"></el-table-column>
       <el-table-column prop="total_node" label="节点数量" min-width="80px"></el-table-column>
       <el-table-column label="操作" fixed="right" min-width="150px" align="center">
         <template slot="header">
