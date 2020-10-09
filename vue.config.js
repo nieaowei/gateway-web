@@ -17,6 +17,7 @@ module.exports = {
         changeOrigin: false
       }
     },
-    disableHostCheck: true
+    disableHostCheck: true,
+    port: 8888,
   }
 }
