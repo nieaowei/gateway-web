@@ -50,32 +50,10 @@ module.exports = {
                 'vue-router': 'VueRouter',
                 'axios': 'axios',
                 "echarts": "echarts",
-                "ElementUI": "element-ui"
+                "element-ui": "ELEMENT"
             },
         }
-        // }
     },
-    //     {
-    //     resolve: {
-    //         alias: {
-    //             syyles: '@assets/styles'
-    //         }
-    //     },
-    //     externals: {
-    //         'vue': 'Vue',
-    //         'vuex': 'Vuex',
-    //         'vue-router': 'VueRouter',
-    //         'axios': 'axios',
-    //         "echarts": "echarts",
-    //         "ElementUI": "element-ui"
-    //     },
-    //     plugins:[
-    //         new CompressionPlugin({
-    //         test: /\.js$|\.html$|\.css/, //匹配文件名
-    //         threshold: 10240, //对超过10k的数据进行压缩
-    //         deleteOriginalAssets: false //是否删除原文件
-    //     })]
-    // },
     devServer: {
         proxy: {
             '/api': {
