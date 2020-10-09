@@ -1,9 +1,9 @@
 FROM nginx:latest
 
-RUN mkdir /home/app
+RUN mkdir /home/app && mv ./nginx.conf /etc/nginx/nginx.conf
 
 COPY . /home/app
 
 WORKDIR /home/app
 
-ENTRYPOINT ["nginx","-c","nginx.conf","-g","daemon off;"]
+ENTRYPOINT ["nginx","-g","daemon off;"]
