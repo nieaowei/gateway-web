@@ -1,8 +1,10 @@
 FROM nginx:latest
 
-RUN mkdir /home/app && mv ./nginx.conf /etc/nginx/nginx.conf
+RUN mkdir /home/app
 
 COPY . /home/app
+
+RUN mv ./nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /home/app
 
