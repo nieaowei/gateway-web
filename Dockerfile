@@ -1,4 +1,4 @@
-FROM node:latest
+FROM nginx:latest
 
 RUN mkdir /home/app
 
