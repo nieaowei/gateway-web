@@ -6,4 +6,4 @@ COPY . /home/app
 
 WORKDIR /home/app
 
-ENTRYPOINT ["nginx","-c","nginx.conf","daemon off;"]
+ENTRYPOINT ["nginx","-c","nginx.conf","-g","daemon off;"]
