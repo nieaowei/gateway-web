@@ -1,17 +1,11 @@
 import Vue from 'vue'
 import VueRouter, {RouteConfig} from 'vue-router'
-import Home from '../views/Home.vue'
-import Service from '@/components/service/Service.vue'
-import Dashboard from '@/components/dashboard/Dashboard.vue'
-import Tenant from '@/components/tenant/Tenant.vue'
-import Index from '@/views/Index.vue'
-import Test from "@/views/Test.vue";
 
 Vue.use(VueRouter)
 export const TestRouter = {
     path: '/test',
     name: 'Test',
-    component: Test,
+    component: () => import('@/views/Test.vue'),
     meta: {
         title: '租户管理-管理中心'
     }
@@ -20,7 +14,7 @@ export const TestRouter = {
 export const TenantRouter = {
     path: 'tenant',
     name: 'Tenant',
-    component: Tenant,
+    component: () => import('@/components/tenant/Tenant.vue'),
     meta: {
         title: '租户管理-管理中心'
     }
@@ -29,7 +23,7 @@ export const TenantRouter = {
 export const DashboardRouter = {
     path: 'dashboard',
     name: 'DashBoard',
-    component: Dashboard,
+    component: () => import('@/components/dashboard/Dashboard.vue'),
     meta: {
         title: '仪表盘-管理中心'
     }
@@ -38,7 +32,7 @@ export const DashboardRouter = {
 export const ServiceRouter = {
     path: 'service',
     name: 'Service',
-    component: Service,
+    component: () => import('@/components/service/Service.vue'),
     meta: {
         title: '服务管理-管理中心'
     }
@@ -47,7 +41,7 @@ export const ServiceRouter = {
 export const RootRouter = {
     path: '/',
     name: 'Index',
-    component: Index,
+    component: () => import('@/views/Index.vue'),
     meta: {
         title: '首页'
     },
@@ -62,7 +56,7 @@ export const RootRouter = {
 export const HomeRouter = {
     path: '/home',
     name: 'Home',
-    component: Home,
+    component: () => import('@/views/Home.vue'),
     meta: {
         title: '管理中心'
     },

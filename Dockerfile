@@ -2,10 +2,8 @@ FROM node:latest
 
 RUN mkdir /home/app
 
+COPY . /home/app
+
 WORKDIR /home/app
 
-COPY . .
-
-RUN npm install
-
-ENTRYPOINT ["npm","run","serve"]
+ENTRYPOINT ["nginx","-c","nginx.conf"]
